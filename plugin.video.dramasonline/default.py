@@ -1,10 +1,8 @@
-import xbmc, xbmcgui, xbmcplugin
-import urllib2,urllib,cgi, re, urlresolver, sys
-import urlparse
+import urllib2,urllib,cgi, re, sys
 import HTMLParser
-import xbmcaddon
-from operator import itemgetter
-import traceback,os
+import xbmc, xbmcgui, xbmcplugin, xbmcaddon
+import urlresolver
+import traceback
 
 __addon__       = xbmcaddon.Addon()
 __addonname__   = __addon__.getAddonInfo('name')
@@ -88,8 +86,6 @@ def get_params():
 	return param
 
 
-
-
 def Addtypes():
 	baseLink = 'http://www.dramasonline.com/%s-latest-dramas-episodes-online/'
 	#2 is series=3 are links
@@ -106,18 +102,13 @@ def Addtypes():
 	addDir('Top Rated Dramas' ,'http://www.dramasonline.com/' ,5,'http://i.imgur.com/aFWO9Y7.png') # top 
 	addDir('Live Channels' ,'http://www.dramasonline.com/category/live-channels/' ,6,'') ##
 	addDir('Settings' ,'http://www.dramasonline.com/category/live-channels/' ,8,'',isItFolder=False) ##
-	return
 
 def ShowSettings(Fromurl):
 	selfAddon.openSettings()
 
 def AddSeries(Fromurl):
-	print Fromurl
-	req = urllib2.Request(Fromurl)
-	req.add_header('User-Agent','Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
+	link = getHtml(Fromurl)
+
 	#print link
 #	print "addshows"
 #	match=re.compile('<param name="URL" value="(.+?)">').findall(link)
@@ -156,12 +147,9 @@ def AddSeries(Fromurl):
 		addDir('Next Page' ,match[0] ,2, '')
 
 def TopRatedDramas(Fromurl):
-	#print Fromurl
-	req = urllib2.Request(Fromurl)
-	req.add_header('User-Agent','Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
+
+	link = getHtml(Fromurl)
+
 #	print link
 #	print "addshows"
 #	match=re.compile('<param name="URL" value="(.+?)">').findall(link)
@@ -194,11 +182,8 @@ def TopRatedDramas(Fromurl):
 def AddEnteries(Fromurl):
 	print 'getting enteries %s' % Fromurl
 
-	req = urllib2.Request(Fromurl)
-	req.add_header('User-Agent','Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
+	link = getHtml(Fromurl)
+
 #	print link
 #	print "addshows"
 #	match=re.compile('<param name="URL" value="(.+?)">').findall(link)
@@ -214,7 +199,6 @@ def AddEnteries(Fromurl):
 #	print Fromurl
 
 	#print match
-	h = HTMLParser.HTMLParser()
 
 	for cname in match:
 		addDir(cname[1] ,cname[0] ,4,cname[2],isItFolder=False)
@@ -224,13 +208,11 @@ def AddEnteries(Fromurl):
 
 	if len(match)==1:
 		addDir('Next Page' ,match[0] ,3, '')
-	
+
 def AddChannels(liveURL):
-	req = urllib2.Request(liveURL)
-	req.add_header('User-Agent','Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
+
+	link = getHtml(liveURL)
+
 #	print link
 #	match=re.compile('<param name="URL" value="(.+?)">').findall(link)
 #	match=re.compile('<a href="(.+?)"').findall(link)
@@ -247,15 +229,12 @@ def AddChannels(liveURL):
 	for cname in match:
 		addDir(Colored(cname[1],'ZM') ,cname[0] ,7,cname[2], False, True,isItFolder=False)		#name,url,mode,icon
 
-	return	
 
 def AddChannelsFromEbound():
 	liveURL='http://eboundservices.com/istream_demo.php'
-	req = urllib2.Request(liveURL)
-	req.add_header('User-Agent','Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
+
+	link = getHtml(liveURL)
+
 #	print link
 #	match=re.compile('<param name="URL" value="(.+?)">').findall(link)
 #	match=re.compile('<a href="(.+?)"').findall(link)
@@ -500,7 +479,7 @@ def PlayShowLink ( url ):
 	
 	line1 = "Playing DM Link"
 	time = 5000  #in miliseconds
- 	defaultLinkType=0 #0 youtube,1 DM,2 tunepk
+	defaultLinkType=0 #0 youtube,1 DM,2 tunepk
 	defaultLinkType=selfAddon.getSetting( "DefaultVideoType" ) 
 	#print defaultLinkType
 	#print "LT link is" ;8+ linkType
@@ -554,7 +533,7 @@ def PlayShowLink ( url ):
 		print stream_url
 		playlist.add(stream_url,listitem)
 		xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-	        xbmcPlayer.play(playlist)
+		xbmcPlayer.play(playlist)
 
 #src="(.*?(tune\.pk).*?)"
 	else:	#either its default or nothing selected
@@ -646,7 +625,7 @@ def PlayLiveLink ( url ):
 		progress.update( 60, "", "Finding links..", "" )
 
 		post = {'username':'hash'}
-        	post = urllib.urlencode(post)
+		post = urllib.urlencode(post)
 		req = urllib2.Request('http://eboundservices.com/flashplayerhash/index.php')
 		req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36')
 		response = urllib2.urlopen(req,post)
@@ -661,7 +640,7 @@ def PlayLiveLink ( url ):
 		#print url
 		#print match
 
-		strval =link;# match[0]
+		strval =link # match[0]
 
 		#listitem = xbmcgui.ListItem(name)
 		#listitem.setInfo('video', {'Title': name, 'Genre': 'Live TV'})
