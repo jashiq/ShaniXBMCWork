@@ -710,7 +710,6 @@ def getItems(items,fanart):
                 else:
                     if isXMLSource:
                             if not 'ignore' in url[0] and not regexs == None: #<externallink> and <regex>
-                                print '#<externallink> and <regex>'
                                 addDir(name.encode('utf-8'),ext_url[0].encode('utf-8'),1,thumbnail,fanart,desc,genre,date,None,'!!update',regexs,url[0].encode('utf-8'))
                                 #addLink(url[0],name.encode('utf-8', 'ignore')+  '[COLOR yellow]build XML[/COLOR]',thumbnail,fanArt,desc,genre,date,True,None,regexs,total)
                             else:
@@ -1867,15 +1866,17 @@ def play_playlist(name, mu_playlist,queueVideo=None):
                         sepate = i.split('&regexs=')
                         print sepate
                         url,setresolved = getRegexParsed(sepate[1], sepate[0])
+                    elif "&mode=19" in i:
+                        url = urlsolver(i.replace('&mode=19','').replace(';',''))                        
                     if url:
-                        playlist.add(i, info)
+                        playlist.add(url, info)
                     else:
                         raise
                 except Exception:
                     playlist.add(i, info)
                     pass #xbmc.Player().play(url)
 
-                xbmc.executebuiltin('playlist.playoffset(video,0)')
+            xbmc.executebuiltin('playlist.playoffset(video,0)')
         else:
 
                 listitem = xbmcgui.ListItem(name)
@@ -2048,7 +2049,8 @@ def addLink(url,name,iconimage,fanart,description,genre,date,showcontext,playlis
             mode = '17'
             contextMenu.append(('[COLOR white]!!Download Currently Playing!![/COLOR]','XBMC.RunPlugin(%s?url=%s&mode=21&name=%s)'
                                     %(sys.argv[0], urllib.quote_plus(url), urllib.quote_plus(name))))
-        elif  any(x in url for x in resolve_url) and  url.startswith('http'):
+        elif  (any(x in url for x in resolve_url) and  url.startswith('http')) or url.endswith('&mode=19'):
+            url=url.replace('&mode=19','')
             mode = '19'
             contextMenu.append(('[COLOR white]!!Download Currently Playing!![/COLOR]','XBMC.RunPlugin(%s?url=%s&mode=21&name=%s)'
                                     %(sys.argv[0], urllib.quote_plus(url), urllib.quote_plus(name))))
