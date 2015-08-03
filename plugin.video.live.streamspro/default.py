@@ -88,7 +88,6 @@ def makeRequest(url, headers=None):
                 addon_log('Reason: %s' %e.reason)
                 xbmc.executebuiltin("XBMC.Notification(LiveStreamsPro,We failed to reach a server. - "+str(e.reason)+",10000,"+icon+")")
 
-
 def getSources():
         if os.path.exists(favorites) == True:
             addDir('Favorites','url',4,os.path.join(home, 'resources', 'favorite.png'),FANART,'','','','')
@@ -97,11 +96,6 @@ def getSources():
         if addon.getSetting("browse_community") == "true":
             addDir('Community Files','community_files',16,icon,FANART,'','','','')
         if addon.getSetting("searchotherplugins") == "true":
-
-
-
-
-
             addDir('Search Other Plugins','Search Plugins',25,icon,FANART,'','','','')
         if os.path.exists(source_file)==True:
             sources = json.loads(open(source_file,"r").read())
@@ -131,14 +125,12 @@ def getSources():
                         if i.has_key('credits'):
                             credits = i['credits']
                         addDir(i['title'].encode('utf-8'),i['url'].encode('utf-8'),1,thumb,fanart,desc,genre,date,credits,'source')
-
             else:
                 if len(sources) == 1:
                     if isinstance(sources[0], list):
                         getData(sources[0][1].encode('utf-8'),FANART)
                     else:
                         getData(sources[0]['url'], sources[0]['fanart'])
-
 
 def addSource(url=None):
         if url is None:
@@ -219,7 +211,6 @@ def addSource(url=None):
                 xbmc.executebuiltin("XBMC.Container.Update(%s?mode=10,replace)" %sys.argv[0])
         else: addon.openSettings()
 
-
 def rmSource(name):
         sources = json.loads(open(source_file,"r").read())
         for index in range(len(sources)):
@@ -238,8 +229,6 @@ def rmSource(name):
                     b.close()
                     break
         xbmc.executebuiltin("XBMC.Container.Refresh")
-
-
 
 def get_xml_database(url, browse=False):
         if url is None:
@@ -279,15 +268,12 @@ def getCommunitySources(browse=False):
             else:
                 addDir(name,url+name,11,icon,fanart,'','','','','download')
 
-
 def getSoup(url,data=None):
-        print 'getsoup',url,data
         if url.startswith('http://') or url.startswith('https://'):
             data = makeRequest(url)
             if re.search("#EXTM3U",data) or 'm3u' in url:
                 print 'found m3u data',data
                 return data
-
         elif data == None:
             if not '/'  in url or not '\\' in url:
                 print 'No directory found. Lets make the url to cache dir'
@@ -497,7 +483,6 @@ def getSubChannelItems(name,url,fanart):
         items = channel_list('subitem')
         getItems(items,fanart)
 
-
 def getItems(items,fanart):
         total = len(items)
         addon_log('Total Items: %s' %total)
@@ -578,23 +563,11 @@ def getItems(items,fanart):
                 elif len(item('dm')) >0:
                     for i in item('dm'):
                         if not i.string == None:
-
-
-
-
-
-
-
-
                             dm = "plugin://plugin.video.dailymotion_com/?mode=playVideo&url=" + i.string
                             url.append(dm)
                 elif len(item('dmlive')) >0:
                     for i in item('dmlive'):
                         if not i.string == None:
-
-
-
-
                             dm = "plugin://plugin.video.dailymotion_com/?mode=playLiveVideo&url=" + i.string
                             url.append(dm)
                 elif len(item('utube')) >0:
@@ -634,7 +607,7 @@ def getItems(items,fanart):
 
                                 else:
                                     f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)+'&amp;streamtype=SIMPLE'
-                        url.append(f4m)
+                            url.append(f4m)
                 elif len(item('ftv')) >0:
                     for i in item('ftv'):
                         if not i.string == None:
@@ -721,10 +694,8 @@ def getItems(items,fanart):
                     playlist = []
                     for i in url:
                             if  add_playlist == "false":
-
                                 alt += 1
                                 addLink(i,'%s) %s' %(alt, name.encode('utf-8', 'ignore')),thumbnail,fanArt,desc,genre,date,True,playlist,regexs,total)
-
                             elif  add_playlist == "true" and  ask_playlist_items == 'true':
                                 if regexs:
                                     playlist.append(i+'&regexs='+regexs)
@@ -734,7 +705,6 @@ def getItems(items,fanart):
                                     playlist.append(i)
                             else:
                                 playlist.append(i)
-
                     if len(playlist) > 1:
                         addLink('', name,thumbnail,fanArt,desc,genre,date,True,playlist,regexs,total)
                 else:
@@ -743,7 +713,6 @@ def getItems(items,fanart):
                                 print '#<externallink> and <regex>'
                                 addDir(name.encode('utf-8'),ext_url[0].encode('utf-8'),1,thumbnail,fanart,desc,genre,date,None,'!!update',regexs,url[0].encode('utf-8'))
                                 #addLink(url[0],name.encode('utf-8', 'ignore')+  '[COLOR yellow]build XML[/COLOR]',thumbnail,fanArt,desc,genre,date,True,None,regexs,total)
-
                             else:
                                 addDir(name.encode('utf-8'),ext_url[0].encode('utf-8'),1,thumbnail,fanart,desc,genre,date,None,'source',None,None)
                                 addDir(name.encode('utf-8'),url[0].encode('utf-8'),1,thumbnail,fanart,desc,genre,date,None,'source')
@@ -752,11 +721,9 @@ def getItems(items,fanart):
                         #xbmc.executebuiltin("Container.SetViewMode(500)")
                     else:
                         addLink(url[0],name.encode('utf-8', 'ignore'),thumbnail,fanArt,desc,genre,date,True,None,regexs,total)
-
                     #print 'success'
             except:
                 addon_log('There was a problem adding item - '+name.encode('utf-8', 'ignore'))
-
 
 def parse_regex(reg_item):
                 try:
@@ -876,7 +843,6 @@ def get_ustream(url):
     except:
         return
 
-
 def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCall=False,cachedPages={}, rawPost=False, cookie_jar_file=None):#0,1,2 = URL, regexOnly, CookieJarOnly
         if not recursiveCall:
             regexs = eval(urllib.unquote(regexs))
@@ -891,8 +857,6 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                 m = regexs[k]
                 #print m
                 cookieJarParam=False
-
-
                 if  'cookiejar' in m: # so either create or reuse existing jar
                     #print 'cookiejar exists',m['cookiejar']
                     cookieJarParam=m['cookiejar']
@@ -920,8 +884,6 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                         complete_path=os.path.join(profile,cookie_jar_file)
                         print 'complete_path',complete_path
                         saveCookieJar(cookieJar,cookie_jar_file)
-
-
                 if  m['page'] and '$doregex' in m['page']:
                     m['page']=getRegexParsed(regexs, m['page'],cookieJar,recursiveCall=True,cachedPages=cachedPages)
 
@@ -986,10 +948,6 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                                 w,n= n.split(':')
                                 ck = cookielib.Cookie(version=0, name=n, value=v, port=None, port_specified=False, domain=w, domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
                                 cookieJar.set_cookie(ck)
-
-
-
-
                         if 'origin' in m:
                             req.add_header('Origin', m['origin'])
                         if header_in_page:
@@ -997,8 +955,6 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                             for h in header_in_page:
                                 n,v=h.split('=')
                                 req.add_header(n,v)
-
-
                         if not cookieJar==None:
                             #print 'cookieJarVal',cookieJar
                             cookie_handler = urllib2.HTTPCookieProcessor(cookieJar)
@@ -1038,10 +994,6 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                                 (captcha_challenge,catpcha_word)=processRecaptcha(m['page'])
                                 if captcha_challenge:
                                    post+='&recaptcha_challenge_field='+captcha_challenge+'&recaptcha_response_field='+catpcha_word
-
-
-
-
                         if post:
                             response = urllib2.urlopen(req,post)
                         else:
@@ -1078,8 +1030,6 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                     setresolved=False
                 if  '$doregex' in m['expre']:
                     m['expre']=getRegexParsed(regexs, m['expre'],cookieJar,recursiveCall=True,cachedPages=cachedPages)
-
-
                 if not m['expre']=='':
                     print 'doing it ',m['expre']
                     if '$LiveStreamCaptcha' in m['expre']:
@@ -1134,9 +1084,6 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
             return
         else:
             return url,setresolved
-
-
-
 def getmd5(t):
     import hashlib
     h=hashlib.md5()
