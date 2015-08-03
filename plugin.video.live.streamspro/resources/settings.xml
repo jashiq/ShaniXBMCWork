@@ -8,6 +8,8 @@
     <setting id="debug" type="bool" label="Enable Add-on Debugging" default="false"/>
     <setting id="1080pquality" label="Play 1080p video ON demand if available (Not live)" type="bool" default=""/>
     <setting id="genesisorpulsar" type="enum" values="Genesis|Pulsar" label="Play IMDBid with:" default="Genesis"/>
+    <setting id="donotshowbychannels" label="Do Not show items under channel name" type="bool" default="false"/>
+    
   </category>
   <category label="Add Source">
     <setting id="choose_source" type="enum" values="Choose File|Enter URL" label="Choose Source Type" default=""/>
