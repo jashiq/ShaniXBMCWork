@@ -95,7 +95,7 @@
 
 <addon id="plugin.video.live.streamspro"
        name="LiveStreamsPro"
-       version="1.8.1"
+       version="1.8.2"
        provider-name="Shani">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -202,13 +202,13 @@
 
 <addon id="plugin.video.ZemTV-shani"
        name="ZemTV.com"
-       version="3.6.2"
+       version="3.6.3"
        provider-name="shani">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
 	<import addon="script.module.urlresolver" version="1.0.0"/>
 	<import addon="plugin.video.youtube" version="2.9.2"/>
-       <import addon="script.module.simplejson" />
+    <import addon="script.module.simplejson" version="3.3.0"/>
        	<import addon="script.module.elementtree" version="1.2.8"/>
 
 

@@ -1533,75 +1533,6 @@ def Colored(text = '', colorid = '', isBold = False):
 		text = '[B]' + text + '[/B]'
 	return '[COLOR ' + color + ']' + text + '[/COLOR]'	
 
-def PlayShowLinkDup ( url ): 
-#	url = tabURL.replace('%s',channelName);
-	req = urllib2.Request(url)
-	req.add_header('User-Agent', 'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
-#	print url
-
-	line1 = "Playing DM Link"
-	time = 5000  #in miliseconds
- 	defaultLinkType=0 #0 youtube,1 DM,2 tunepk
-	defaultLinkType=selfAddon.getSetting( "DefaultVideoType" ) 
-	#print defaultLinkType
-	#print "LT link is" + linkType
-	# if linktype is not provided then use the defaultLinkType
-	linkType="LINK"
-	if linkType=="DM" or (linkType=="" and defaultLinkType=="1"):
-		print "PlayDM"
-		line1 = "Playing DM Link"
-		xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time, __icon__))
-#		print link
-		playURL= match =re.findall('src="(.*?(dailymotion).*?)"',link)
-		playURL=match[0][0]
-		print playURL
-		playlist = xbmc.PlayList(1)
-		playlist.clear()
-		listitem = xbmcgui.ListItem(name, iconImage="DefaultVideo.png")
-		listitem.setInfo("Video", {"Title":name})
-		listitem.setProperty('mimetype', 'video/x-msvideo')
-		listitem.setProperty('IsPlayable', 'true')
-		stream_url = urlresolver.HostedMediaFile(playURL).resolve()
-		print stream_url
-		playlist.add(stream_url,listitem)
-		xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-	        xbmcPlayer.play(playlist)
-#src="(.*?(dailymotion).*?)"
-	elif  linkType=="LINK"  or (linkType=="" and defaultLinkType=="2"):
-		line1 = "Playing Tune.pk Link"
-		xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time, __icon__))
-
-		print "PlayLINK"
-		playURL= match =re.findall('<strong>Tune Full<\/strong>\s*.*?src="(.*?(tune\.pk).*?)"', link)
-		playURL=match[0][0]# check if not found then try other methods
-		print playURL
-		playlist = xbmc.PlayList(1)
-		playlist.clear()
-		listitem = xbmcgui.ListItem(name, iconImage="DefaultVideo.png")
-		listitem.setInfo("Video", {"Title":name})
-		listitem.setProperty('mimetype', 'video/x-msvideo')
-		listitem.setProperty('IsPlayable', 'true')
-		stream_url = urlresolver.HostedMediaFile(playURL).resolve()
-		print stream_url
-		playlist.add(stream_url,listitem)
-		xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-	        xbmcPlayer.play(playlist)
-
-#src="(.*?(tune\.pk).*?)"
-	else:	#either its default or nothing selected
-		line1 = "Playing Youtube Link"
-		xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time, __icon__))
-
-		youtubecode= match =re.findall('<strong>Youtube<\/strong>.*?src=\".*?embed\/(.*?)\?.*\".*?<\/iframe>', link,re.DOTALL| re.IGNORECASE)
-		youtubecode=youtubecode[0]
-		uurl = 'plugin://plugin.video.youtube/?action=play_video&videoid=%s' % youtubecode
-#	print uurl
-		xbmc.executebuiltin("xbmc.PlayMedia("+uurl+")")
-	
-	return
 def convert(s):
     try:
         return s.group(0).encode('latin1').decode('utf8')
@@ -1677,6 +1608,7 @@ def AddChannels():
 	
 
 def PlayShowLink ( url ): 
+	global linkType
 #	url = tabURL.replace('%s',channelName);
 	req = urllib2.Request(url)
 	req.add_header('User-Agent', 'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
@@ -1693,10 +1625,10 @@ def PlayShowLink ( url ):
 	print "LT link is" + linkType
 	# if linktype is not provided then use the defaultLinkType
 	
-	if linkType.upper()=="SHOWALL" or (linkType.upper()=="" and defaultLinkType=="5"):
+	if linkType.upper()=="SHOWALL" or (linkType.upper()=="" and defaultLinkType=="4"):
 		ShowAllSources(url,link)
 		return
-	if linkType.upper()=="DM" or (linkType=="" and defaultLinkType=="1"):
+	if linkType.upper()=="DM" or (linkType=="" and defaultLinkType=="0"):
 		print "PlayDM"
 		line1 = "Playing DM Link"
 		xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time, __icon__))
@@ -1722,7 +1654,7 @@ def PlayShowLink ( url ):
 		xbmcPlayer.play(playlist)
 		#xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
 		#src="(.*?(dailymotion).*?)"
-	elif  linkType.upper()=="EBOUND"  or (linkType=="" and defaultLinkType=="4"):
+	elif  linkType.upper()=="EBOUND"  or (linkType=="" and defaultLinkType=="3"):
 		line1 = "Playing Ebound Link"
 		xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time, __icon__))
 		print "Eboundlink"
@@ -1763,7 +1695,7 @@ def PlayShowLink ( url ):
 		playlist.add(stream_url,listitem)
 		xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
 		xbmcPlayer.play(playlist)
-	elif  linkType.upper()=="LINK"  or (linkType=="" and defaultLinkType=="2"):
+	elif  linkType.upper()=="LINK"  or (linkType=="" and defaultLinkType=="1"):
 		line1 = "Playing Tune.pk Link"
 		xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time, __icon__))
 		print "PlayLINK"
@@ -1787,7 +1719,7 @@ def PlayShowLink ( url ):
 		playlist.add(stream_url,listitem)
 		xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
 		xbmcPlayer.play(playlist)
-	elif  linkType.upper()=="PLAYWIRE"  or (linkType=="" and defaultLinkType=="3"):
+	elif  linkType.upper()=="PLAYWIRE"  or (linkType=="" and defaultLinkType=="2"):
 		line1 = "Playing Playwire Link"
 		xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time, __icon__))
 		print "Playwire"

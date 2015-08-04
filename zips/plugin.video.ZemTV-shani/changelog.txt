@@ -1,3 +1,6 @@
+[B]Version 3.6.3[/B]
+Small bug fix
+
 [B]Version 3.6.2[/B]
 added Streams and cricfree
 
