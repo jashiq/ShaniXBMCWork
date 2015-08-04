@@ -303,7 +303,7 @@ def getData(url,fanart):
     #print type(soup)
     if isinstance(soup,BeautifulSOAP):
     #print 'xxxxxxxxxxsoup',soup
-        if len(soup('channels')) > 0 and addon.getSetting('donotshowbychannels') == 'false'::
+        if len(soup('channels')) > 0 and addon.getSetting('donotshowbychannels') == 'false':
             channels = soup('channel')
             for channel in channels:
 #                print channel
