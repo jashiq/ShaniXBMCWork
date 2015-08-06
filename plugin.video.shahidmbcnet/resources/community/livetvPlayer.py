@@ -120,7 +120,8 @@ def PlayStream(sourceEtree, urlSoup, name, url):
 				liveLink=liveLink%(playpath,code,page_url)
 				#liveLink="rtmp://tdsiptv.ddns.me/live/%s?code=%s"%(playpath,code)
 			else:
-				liveLink="rtmp://serv4.livetv.tn/live/%s?code=%s"%(playpath,liveTvPremiumCode)
+				#liveLink="rtmp://serv4.livetv.tn/live/%s?code=%s"%(playpath,liveTvPremiumCode)
+				liveLink="rtmp://iptv.livetv.tn/live/%s?code=%s"%(playpath,liveTvPremiumCode)
 			name+='-LiveTV'
 			print 'liveLink',liveLink
 			listitem = xbmcgui.ListItem( label = str(name), iconImage = "DefaultVideo.png", thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ), path=liveLink )
