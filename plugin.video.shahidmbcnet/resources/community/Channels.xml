@@ -1,10 +1,65 @@
 <channels>
 <channel>
-	<cname>Special Investigation</cname>
-	<imageurl>http://www.capatv.com/wp-content/uploads/2015/03/special_investigation-1030x686.jpg</imageurl>
+	<cname>Bein 4 MAX Fr</cname>
+	<imageurl>http://www.futbolenlatv.com/fotos/20140113121700-bein-max4.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
 	<category>french</category>
+	<category>sports</category>
+	</assignedcategory>
+</channel>
+<channel>
+	<cname>Bein 5 FR MAX</cname>
+	<imageurl>http://www.futbolenlatv.com/fotos/20140113121709-bein-max5.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>french</category>
+	<category>sports</category>
+	</assignedcategory>
+</channel>
+<channel>
+	<cname>Bein 6 FR MAX</cname>
+	<imageurl>http://www.futbolenlatv.com/fotos/20140113121720-bein-max6.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>french</category>
+	<category>sports</category>
+	</assignedcategory>
+</channel>
+<channel>
+	<cname>Bein 7 FR MAX</cname>
+	<imageurl>http://www.futbolenlatv.com/fotos/20140113121731-bein-max7.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>french</category>
+	<category>sports</category>
+	</assignedcategory>
+</channel>
+<channel>
+	<cname>Bein 8 FR MAX</cname>
+	<imageurl>http://www.futbolenlatv.com/fotos/20140113121740-bein-max8.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>french</category>
+	<category>sports</category>
+	</assignedcategory>
+</channel>
+<channel>
+	<cname>Bein 9 FR MAX</cname>
+	<imageurl>http://www.futbolenlatv.com/fotos/20140113121750-bein-max9.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>french</category>
+	<category>sports</category>
+	</assignedcategory>
+</channel>
+<channel>
+	<cname>Bein 10 FR MAX</cname>
+	<imageurl>http://www.futbolenlatv.com/fotos/20140113121634-bein-max10.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>french</category>
+	<category>sports</category>
 	</assignedcategory>
 </channel>
 <channel>

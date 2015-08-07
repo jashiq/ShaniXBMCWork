@@ -1,4 +1,46 @@
 <streaminginfos>
+
+	<streaminginfo>
+		<cname>Bein 4 FR MAX</cname>
+		<chnumber>ch1020</chnumber>
+		<link></link>
+	</streaminginfo>
+	
+	<streaminginfo>
+		<cname>Bein 5 FR MAX</cname>
+		<chnumber>ch1021</chnumber>
+		<link></link>
+	</streaminginfo>
+	
+	<streaminginfo>
+		<cname>Bein 6 FR MAX</cname>
+		<chnumber>ch1022</chnumber>
+		<link></link>
+	</streaminginfo>
+	
+	<streaminginfo>
+		<cname>Bein 7 FR MAX</cname>
+		<chnumber>ch1028</chnumber>
+		<link></link>
+	</streaminginfo>
+	
+	<streaminginfo>
+		<cname>Bein 8 FR MAX</cname>
+		<chnumber>ch1029</chnumber>
+		<link></link>
+	</streaminginfo>
+	
+	<streaminginfo>
+		<cname>Bein 9 FR MAX</cname>
+		<chnumber>ch1030</chnumber>
+		<link></link>
+	</streaminginfo>
+	
+	<streaminginfo>
+		<cname>Bein 10 FR MAX</cname>
+		<chnumber>ch1031</chnumber>
+		<link></link>
+	</streaminginfo>
 	
 	<streaminginfo>
 		<cname>ZDF</cname>
