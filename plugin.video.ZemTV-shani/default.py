@@ -405,6 +405,7 @@ def GetSSSEvents(url):
         url='http://www.supersport.com/live-video'
         req = urllib2.Request(url)
         req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
+        req.add_header('Cookie', 'User_IsMobile=False; supersportcookie=country=ZA&countryName=South Africa;')
         response = urllib2.urlopen(req)
         videoPage =  response.read()
         response.close()
@@ -1745,6 +1746,8 @@ def PlayShowLink ( url ):
 			print 'playURL',playURL
 		else:
 			playURL=playURL[0]
+			if playURL.startswith('//'): playURL='http:'+playURL
+			print playURL            
 			reg='media":\{"(.*?)":"(.*?)"'
 			req = urllib2.Request(playURL)
 			req.add_header('User-Agent', 'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
