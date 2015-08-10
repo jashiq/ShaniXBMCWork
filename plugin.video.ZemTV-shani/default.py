@@ -1302,14 +1302,14 @@ def get_dag_url(page_data):
     return final_url
 
 def getPV2Url():
-    req = urllib2.Request( base64.b64decode('aHR0cDovL2FwcC5keW5ucy5jb20vaXB0dnBhbm5lbC9vdXRwdXQucGhwL3BsYXlsaXN0P3R5cGU9eG1sJmRldmljZVNuPXBha2luZGlhaGR0djIwMTU='))
-    req.add_header('Authorization', base64.b64decode('QmFzaWMgWVdSdGFXNWhiSGQ1Y3pwd1lYTnpZWEpoYVc0PQ==')) 
+    req = urllib2.Request( base64.b64decode('aHR0cHM6Ly9hcHAuZHlubnMuY29tL25ld3BhbmVsL291dHB1dC5waHAvcGxheWxpc3Q/dHlwZT14bWwmZGV2aWNlU249cGFraW5kaWFoZDI='))
+    req.add_header('Authorization', base64.b64decode('QmFzaWMgYkc5bmFXNWhiSGRoZVhNNlFHUnVRRzQ0TkRrPQ==')) 
     response = urllib2.urlopen(req)
     link=response.read()
     return link
 def getPV2Auth():
-    req = urllib2.Request( base64.b64decode('aHR0cDovL2hhc2guZHlubnMuY29tL2tleXMvYXBwc19zZWN1cmUucGhw'))
-    req.add_header('Authorization', base64.b64decode('QmFzaWMgWTJodmNHbGhianBoY21GcGJtRnNkMkY1YzJkaGJtUjE=')) 
+    req = urllib2.Request( base64.b64decode('aHR0cHM6Ly9hcHAuZHlubnMuY29tL2tleXMvYXBwc190b2tlbi5waHA='))
+    req.add_header('Authorization', base64.b64decode('QmFzaWMgZG05NGMyOW1kR1Y0Y0dWeWREcEFkbTk0YzI5bWRHVjRjR1Z5ZEVBPQ==')) 
     response = urllib2.urlopen(req)
     link=response.read()
     return link
@@ -1333,7 +1333,9 @@ def PlayPV2Link(url):
         urlToPlay=re.findall(url+'..programTitle.*?programURL\\>(.*?)\\<',xmldata)[0]
     else:
         urlToPlay=base64.b64decode(url)
+    print 'urlToPlay',urlToPlay    
     urlToPlay+=getPV2Auth()
+    print 'urlToPlay',urlToPlay
     listitem = xbmcgui.ListItem( label = str(name), iconImage = "DefaultVideo.png", thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ) )
     print "playing stream name: " + str(name) 
     xbmc.Player( xbmc.PLAYER_CORE_AUTO ).play( urlToPlay, listitem)    
