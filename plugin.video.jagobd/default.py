@@ -99,11 +99,14 @@ def getLiveUrl(url):
     progress.update( 10, "", "Finding links..", "" )
 
     #print 'fetching url',url
-    link=getURL(url).result;
+    link=getURL(url, mobile=False).result;
     #print 'link',link
     progress.update( 30, "", "Finding links..", "" )
     h=HTMLParser.HTMLParser()
     match= re.findall('<iframe name="ifram2" src="(.*?)"', link)
+    if len(match)==0:
+        match= re.findall('<iframe src="(.*?)" name="ifram2"', link)
+    print match    
     if len(match)==0:
         progress.update( 60, "", "Finding links..", "" )
 
@@ -112,6 +115,7 @@ def getLiveUrl(url):
         #print link,match
         zzUrl="http://www.zzcast.com/embed.php?u=%s&vw=600&vh=400&domain=www.jagobd.com"%(match[0])
     else:
+        print 'getting zurl',match[0]
         zzUrl=h.unescape(match[0])
     print zzUrl,'zzURL'
     if len(zzUrl)==0:
@@ -123,19 +127,21 @@ def getLiveUrl(url):
     #print link,zzUrl
     #link=zzUrl
     progress.update( 90, "", "Finding links..", "" )
-    #match= re.findall('SWFObject\(\'(.*?)\',.*file\',\'(.*?)\'.*streamer\',\'(.*?)\'', link, re.DOTALL)
-    match= re.findall('href="(http.*?playlist.*?)"', link)
+    match= re.findall('SWFObject\(\'(.*?)\',.*file\',\'(.*?)\'.*streamer\',\'(.*?)\'', link, re.DOTALL)
+    
+    
+    #match= re.findall('(http.*?playlist.*?)', link)
     #print match
    
     #link=getURL(match[0][0],referer=url, mobile=True).result;
-#    match= re.findall('(http.*?)\\s', link, re.DOTALL)
-    print match
+   # match= re.findall('(http.*?playlist.*?)\\s', link, re.DOTALL)
+    print 'final match is',match,link
     progress.update( 100, "", "Finding links..", "" )
 
     if len(match)==0:
         return None
-    return {'url':match[0]}
-    #return {'rtmp':match[0][2],'playpath':match[0][1],'swf':match[0][0],'pageUrl':zzUrl}
+    #return {'url':match[0]+'|Referer='+zzUrl}
+    return {'rtmp':match[0][2],'playpath':match[0][1],'swf':match[0][0],'pageUrl':zzUrl}
     
     
 
@@ -149,16 +155,15 @@ def PlayLiveLink ( url,name ):
         time=2000
         xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time, __icon__))
 
-        if 1==2:
+        if 1==1:
             rtmp=urlDic["rtmp"]
             playPath=urlDic["playpath"]
             swf=urlDic["swf"]
             pageurl=urlDic["pageUrl"]
-
-            playfile= "%s playpath=%s swfUrl=%s token=%s live=1 timeout=15 swfVfy=1 flashVer=WIN\\2015,0,0,167 pageUrl=%s"%(rtmp,playPath,swf,'%bedcsd(nKa@#.',pageurl)
+            playfile= "%s playpath=%s swfUrl=%s token=%s live=1 timeout=15 swfVfy=1 flashVer=WIN\\2015,0,0,167 pageUrl=%s"%(rtmp,playPath,swf,'%pwrter(nKa@#.',pageurl)
     #        playfile= "%s playpath=%s swfUrl=%s live=1 timeout=15 swfVfy=1 flashVer=WIN\\2015,0,0,167 pageUrl=%s"%(rtmp,playPath,swf,pageurl)
-
-        playfile=urlDic["url"]
+        else:
+            playfile=urlDic["url"]
         print 'playfile', playfile
         listitem = xbmcgui.ListItem( label = str(name), iconImage = "DefaultVideo.png", thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ) )
         print "playing stream name: " + str(name) 

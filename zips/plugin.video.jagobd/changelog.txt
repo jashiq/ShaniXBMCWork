@@ -21,3 +21,6 @@ B]Version 1.0.3[/B]
 - icon changed
 [B]Version 1.0.9[/B]
 - fixed play
+
+[B]Version 1.1.0[/B]
+- Updated decryption
