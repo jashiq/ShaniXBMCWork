@@ -1,3 +1,6 @@
+Version 1.8.4
+bugfix duplicate entry
+
 Version 1.8.3
 bugfix
 
