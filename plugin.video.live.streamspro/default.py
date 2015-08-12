@@ -272,7 +272,7 @@ def getSoup(url,data=None):
         if url.startswith('http://') or url.startswith('https://'):
             data = makeRequest(url)
             if re.search("#EXTM3U",data) or 'm3u' in url:
-                print 'found m3u data',data
+                print 'found m3u data'
                 return data
         elif data == None:
             if not '/'  in url or not '\\' in url:
@@ -289,7 +289,7 @@ def getSoup(url,data=None):
                 else:
                     data = open(url, 'r').read()
                     if re.match("#EXTM3U",data)or 'm3u' in url:
-                        print 'found m3u data',data
+                        print 'found m3u data'
                         return data
             else:
                 addon_log("Soup Data not found!")
@@ -380,7 +380,7 @@ def getData(url,fanart):
 # This will not go through the getItems functions ( means you must have ready to play url, no regex)
 def parse_m3u(data):
     content = data.rstrip()
-    match = re.compile(r'#EXTINF:(.+?),(.*?)[\n\r]+([^\n]+)').findall(content)
+    match = re.compile(r'#EXTINF:(.+?),(.*?)[\n\r]+([^\r\n]+)').findall(content)
     total = len(match)
     print 'total m3u links',total
     for other,channel_name,stream_url in match:
