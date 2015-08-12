@@ -1,6 +1,12 @@
 <streaminginfos>
 	
 	<streaminginfo>
+		<cname>6ter</cname>
+		<chnumber>ch997</chnumber>
+		<link></link>
+	</streaminginfo>	
+	
+	<streaminginfo>
 		<cname>sunnah TV</cname>
 		<chnumber>ch346</chnumber>
 		<link></link>
@@ -637,12 +643,12 @@
 
         <streaminginfo>
         <cname>Disney</cname>
-        <chnumber>ch899</chnumber>
+        <chnumber>ch861</chnumber>
     <link>http://www.livetv.tn/Disney-HD-en-direct-live.html</link></streaminginfo>
 
         <streaminginfo>
         <cname>Disney XD</cname>
-        <chnumber>ch861</chnumber>
+        <chnumber>ch899</chnumber>
     <link>http://www.livetv.tn/Disney-XD-en-direct-live.html</link></streaminginfo>
 
         <streaminginfo>
