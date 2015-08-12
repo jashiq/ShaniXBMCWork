@@ -1260,7 +1260,14 @@ def get_ferrari_url(page_data,progress):
     i=0
     addval=0
     opener = urllib2.build_opener(NoRedirection)
-    while i<3:      
+    patt2='adsid=(.*?)&'
+    adsid=re.compile(patt2).findall(page_data)[0]
+    print 'adsid',adsid
+    adsidnew=int(adsid)-20000000
+    page_data=page_data.replace(adsid,str(adsidnew))
+    from datetime import datetime
+    t1 = datetime.now()
+    while i<1:      
         if not 'EXT-X-DISCONTINUITY' in page_data2:
 #            print page_data
             page_data2=getUrl(page_data);
@@ -1274,15 +1281,20 @@ def get_ferrari_url(page_data,progress):
                 try:
                         if 1==1 or 'getDataTracker' in l:
 #                            print 'playing the link'+l
-                            #page_datatemp=getUrl(l,headers=headers,noredirect=True);
+                            #page_datatemp=getUrl(l,headers=headers);
 
                             response = opener.open(l)
                             
                 except: traceback.print_exc(file=sys.stdout)
+
         else:
             break
         i+=1
-
+    t2 = datetime.now()
+    delta = t2 - t1
+#    timetowait=18000-(delta.seconds*1000)
+#    progress.update( 90, "", "wait for "+ str(timetowait/1000) , "" )
+    #xbmc.sleep(timetowait)
     progress.update( 90, "", "Almost completed" , "" )
     print 'work done here '+page_data
     return page_data+'|&X-Playback-Session-Id='+playback

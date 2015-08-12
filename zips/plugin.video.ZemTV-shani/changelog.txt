@@ -1,3 +1,6 @@
+[B]Version 3.6.6[/B]
+Fixed ads
+
 [B]Version 3.6.5[/B]
 Fixed pv2
 
