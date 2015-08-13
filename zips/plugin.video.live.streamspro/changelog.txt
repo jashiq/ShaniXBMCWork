@@ -1,3 +1,7 @@
+Version 1.8.5
+bugfix m3u parsing
+
+
 Version 1.8.4
 bugfix duplicate entry
 
