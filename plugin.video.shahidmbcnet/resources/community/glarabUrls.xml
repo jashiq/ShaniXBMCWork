@@ -8298,14 +8298,14 @@
 <streaminginfo>
 <cname>Future TV</cname>
 <item>
-<title>HD</title>
+<title>Future_HD</title>
 <link>http://$GL-IPHD$:7777/Future_HD.m3u8?user=$GL-User$&amp;session=$GL-Sesession$</link>
 </item>
 </streaminginfo>
 <streaminginfo>
 <cname>Future TV</cname>
 <item>
-<title>HD</title>
+<title>FutureUSA_HD</title>
 <link>http://$GL-IPHD$:7777/FutureUSA_HD.m3u8?user=$GL-User$&amp;session=$GL-Sesession$</link>
 </item>
 </streaminginfo>
