@@ -1,4 +1,10 @@
 <streaminginfos>
+
+	<streaminginfo>
+		<cname>Teletoon+</cname>
+		<chnumber>ch1008</chnumber>
+		<link></link>
+	</streaminginfo>
 	
 	<streaminginfo>
 		<cname>6ter</cname>
@@ -24,48 +30,6 @@
 		<link></link>
 	</streaminginfo>
 
-	<streaminginfo>
-		<cname>Bein 4 FR MAX</cname>
-		<chnumber>ch1020</chnumber>
-		<link></link>
-	</streaminginfo>
-	
-	<streaminginfo>
-		<cname>Bein 5 FR MAX</cname>
-		<chnumber>ch1021</chnumber>
-		<link></link>
-	</streaminginfo>
-	
-	<streaminginfo>
-		<cname>Bein 6 FR MAX</cname>
-		<chnumber>ch1022</chnumber>
-		<link></link>
-	</streaminginfo>
-	
-	<streaminginfo>
-		<cname>Bein 7 FR MAX</cname>
-		<chnumber>ch1028</chnumber>
-		<link></link>
-	</streaminginfo>
-	
-	<streaminginfo>
-		<cname>Bein 8 FR MAX</cname>
-		<chnumber>ch1029</chnumber>
-		<link></link>
-	</streaminginfo>
-	
-	<streaminginfo>
-		<cname>Bein 9 FR MAX</cname>
-		<chnumber>ch1030</chnumber>
-		<link></link>
-	</streaminginfo>
-	
-	<streaminginfo>
-		<cname>Bein 10 FR MAX</cname>
-		<chnumber>ch1031</chnumber>
-		<link></link>
-	</streaminginfo>
-	
 	<streaminginfo>
 		<cname>ZDF</cname>
 		<chnumber>ch1089</chnumber>
@@ -109,7 +73,7 @@
 	</streaminginfo>
 
 	<streaminginfo>
-		<cname>Foot Plus</cname>
+		<cname>Foot+</cname>
 		<chnumber>ch903</chnumber>
 		<link></link></streaminginfo>
 	
@@ -522,27 +486,27 @@
     <link>http://www.livetv.tn/Canal-Algerie-en-direct-live.html</link></streaminginfo>
 
 	<streaminginfo>
-        <cname>Canal Cinema</cname>
+        <cname>Canal+ Cinema</cname>
         <chnumber>ch801</chnumber>
     <link>http://www.livetv.tn/Canal-Cinema-en-direct-live.html</link></streaminginfo>
 
 	<streaminginfo>
-        <cname>Canal plus</cname>
+        <cname>Canal+</cname>
         <chnumber>ch800</chnumber>
     <link>http://www.livetv.tn/Canal-Plus-en-direct-live.html</link></streaminginfo>
 
 	<streaminginfo>
-        <cname>Canal Plus Decale</cname>
+        <cname>Canal+ Decale</cname>
         <chnumber>ch930</chnumber>
-		<link>http://www.livetv.tn/Canal-Plus-Decale-HD-en-direct-live.html</link></streaminginfo>
+	<link>http://www.livetv.tn/Canal-Plus-Decale-HD-en-direct-live.html</link></streaminginfo>
 
 	<streaminginfo>
-        <cname>Canal Plus Family</cname>
+        <cname>Canal+ Family</cname>
         <chnumber>ch919</chnumber>
     <link>http://www.livetv.tn/Canal-Plus-Family-HD-en-direct-live.html</link></streaminginfo>
 
 	<streaminginfo>
-        <cname>Canal Plus Series</cname>
+        <cname>Canal+ Series</cname>
         <chnumber>ch306</chnumber>
     <link>http://www.livetv.tn/Canal-Plus-Series-HD-en-direct-live.html</link></streaminginfo>
 
@@ -592,7 +556,7 @@
     <link>http://www.livetv.tn/Cima-en-direct-live.html</link></streaminginfo>
 
         <streaminginfo>
-        <cname>Cine Emotion</cname>
+        <cname>Cine+ Emotion</cname>
         <chnumber>ch921</chnumber>
     <link>http://www.livetv.tn/Cine-Emotion-HD-en-direct-live.html</link></streaminginfo>
 
@@ -602,12 +566,12 @@
     <link>http://www.livetv.tn/Cine-Majestic-en-direct-live.html</link></streaminginfo>
 
         <streaminginfo>
-        <cname>Cine Plus Frisson</cname>
+        <cname>Cine+ Frisson</cname>
         <chnumber>ch941</chnumber>
     <link>http://www.livetv.tn/Cine-Plus-Frisson-en-direct-live.html</link></streaminginfo>
 
         <streaminginfo>
-        <cname>Cine plus Premier</cname>
+        <cname>Cine+ Premier</cname>
         <chnumber>ch920</chnumber>
     <link>http://www.livetv.tn/Cine-plus-Premier-HD-en-direct-live.html</link></streaminginfo>
 
