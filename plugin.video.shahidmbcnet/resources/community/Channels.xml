@@ -149,6 +149,14 @@
 	</assignedcategory>
 </channel>
 <channel>
+	<cname>SBC</cname>
+	<imageurl>http://allsbc.com/sbcon/wp-content/themes/sbc-2015/images/sbc-logo-blue-lg.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>africa</category>
+	</assignedcategory>
+</channel>
+<channel>
 	<cname>Sudan Drama</cname>
 	<imageurl>http://s21.postimg.org/wphlwbekn/sudan.png</imageurl>
 	<enabled>True</enabled>
