@@ -1,7 +1,17 @@
 <channels>
+
 <channel>
-	<cname>Bein 4 FR MAX</cname>
-	<imageurl>http://www.futbolenlatv.com/fotos/20140113121700-bein-max4.png</imageurl>
+	<cname>Teletoon+</cname>
+	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalplus_fr_teletoon_plus.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>french</category>
+	<category>kids</category>
+	</assignedcategory>
+</channel>
+<channel>
+	<cname>Golf+</cname>
+	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalplus_fr_golf_plus.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
 	<category>french</category>
@@ -9,61 +19,7 @@
 	</assignedcategory>
 </channel>
 <channel>
-	<cname>Bein 5 FR MAX</cname>
-	<imageurl>http://www.futbolenlatv.com/fotos/20140113121709-bein-max5.png</imageurl>
-	<enabled>True</enabled>
-	<assignedcategory>
-	<category>french</category>
-	<category>sports</category>
-	</assignedcategory>
-</channel>
-<channel>
-	<cname>Bein 6 FR MAX</cname>
-	<imageurl>http://www.futbolenlatv.com/fotos/20140113121720-bein-max6.png</imageurl>
-	<enabled>True</enabled>
-	<assignedcategory>
-	<category>french</category>
-	<category>sports</category>
-	</assignedcategory>
-</channel>
-<channel>
-	<cname>Bein 7 FR MAX</cname>
-	<imageurl>http://www.futbolenlatv.com/fotos/20140113121731-bein-max7.png</imageurl>
-	<enabled>True</enabled>
-	<assignedcategory>
-	<category>french</category>
-	<category>sports</category>
-	</assignedcategory>
-</channel>
-<channel>
-	<cname>Bein 8 FR MAX</cname>
-	<imageurl>http://www.futbolenlatv.com/fotos/20140113121740-bein-max8.png</imageurl>
-	<enabled>True</enabled>
-	<assignedcategory>
-	<category>french</category>
-	<category>sports</category>
-	</assignedcategory>
-</channel>
-<channel>
-	<cname>Bein 9 FR MAX</cname>
-	<imageurl>http://www.futbolenlatv.com/fotos/20140113121750-bein-max9.png</imageurl>
-	<enabled>True</enabled>
-	<assignedcategory>
-	<category>french</category>
-	<category>sports</category>
-	</assignedcategory>
-</channel>
-<channel>
-	<cname>Bein 10 FR MAX</cname>
-	<imageurl>http://www.futbolenlatv.com/fotos/20140113121634-bein-max10.png</imageurl>
-	<enabled>True</enabled>
-	<assignedcategory>
-	<category>french</category>
-	<category>sports</category>
-	</assignedcategory>
-</channel>
-<channel>
-	<cname>Foot Plus</cname>
+	<cname>Foot+</cname>
 	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalsat_fr_foot_plus.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
@@ -4856,7 +4812,7 @@
 	</assignedcategory>
 </channel>	
 <channel>
-	<cname>Canal Plus Series</cname>
+	<cname>Canal+ Series</cname>
 	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalplus_fr_series.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
@@ -4864,7 +4820,7 @@
 	</assignedcategory>
 </channel>	
 <channel>
-	<cname>Canal plus</cname>
+	<cname>Canal+</cname>
 	<imageurl>http://www.gwenael.org/xbmc-streams/images/channels/9.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
@@ -6352,8 +6308,8 @@
 </channel>	
 
 <channel>
-	<cname>Canal Cinema</cname>
-	<imageurl>http://www.gwenael.org/xbmc-streams/images/channels/518.png</imageurl>
+	<cname>Canal+ Cinema</cname>
+	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalplus_fr_cinema.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
 	<category>french</category>
@@ -7191,7 +7147,7 @@
 	</assignedcategory>
 </channel>
 <channel>
-	<cname>Canal Plus Decale</cname>
+	<cname>Canal+ Decale</cname>
 	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalplus_fr_decale.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
@@ -7199,7 +7155,7 @@
     </assignedcategory>
 </channel>	
 <channel>
-	<cname>Canal Plus Family</cname>
+	<cname>Canal+ Family</cname>
 	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalplus_fr_family.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
@@ -7208,24 +7164,24 @@
 </channel>	
 
 <channel>
-	<cname>Cine Emotion</cname>
-	<imageurl>http://www.lyngsat-logo.com/logo/tv/cc/cine_cinema_emotion.jpg</imageurl>
+	<cname>Cine+ Emotion</cname>
+	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalplus_fr_cine_plus_emotion.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
 	<category>french</category>
     </assignedcategory>
 </channel>	
 <channel>
-	<cname>Cine Plus Frisson</cname>
-	<imageurl>http://www.lyngsat-logo.com/logo/tv/cc/canalplus_fr_cine_plus_frisson_hd.png</imageurl>
+	<cname>Cine+ Frisson</cname>
+	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalplus_fr_cine_plus_frisson.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
 	<category>french</category>
     </assignedcategory>
 </channel>	
 <channel>
-	<cname>Cine plus Premier</cname>
-	<imageurl>http://www.lyngsat-logo.com/logo/tv/cc/cine_cinema_premier.png</imageurl>
+	<cname>Cine+ Premier</cname>
+	<imageurl>http://www.lyngsat-logo.com/hires/cc/canalplus_fr_cine_plus_premier.png</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
 	<category>french</category>
