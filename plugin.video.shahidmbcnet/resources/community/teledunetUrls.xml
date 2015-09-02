@@ -89,9 +89,9 @@
 	<streaminginfo><cname>CBC</cname><url>cbc</url></streaminginfo>
 	<streaminginfo><cname>Cairo Cinema</cname><url>cairo_cinema</url></streaminginfo>
 	<streaminginfo><cname>Cairo Drama</cname><url>cairo_drama</url></streaminginfo>
-	<streaminginfo><cname>Canal Cinema</cname><url>canal_plus_cinema</url></streaminginfo>
+	<streaminginfo><cname>Canal+ Cinema</cname><url>canal_plus_cinema</url></streaminginfo>
 	<streaminginfo><cname>Canal+ Sport</cname><url>canal_plus_sport</url></streaminginfo>
-	<streaminginfo><cname>Canal plus</cname><url>canal_plus</url></streaminginfo>
+	<streaminginfo><cname>Canal+</cname><url>canal_plus</url></streaminginfo>
 	<streaminginfo><cname>Cartoon Network</cname><url>cartoon_network</url></streaminginfo>
 	<streaminginfo><cname>Cherie 25</cname><url>cherie_25</url></streaminginfo>
 	<streaminginfo><cname>Cima</cname><url>cima</url></streaminginfo>
