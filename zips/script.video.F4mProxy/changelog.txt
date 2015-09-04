@@ -62,3 +62,6 @@ added akhds support for tag decrypt and pvtoken
 
 [B]Version 2.2.4[/B]
 removed crypto reference
+
+[B]Version 2.2.5[/B]
+small bug

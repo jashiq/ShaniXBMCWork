@@ -22,12 +22,11 @@ import array
 try:
     from Crypto.Cipher import AES
     USEDec=1 ## 1==crypto 2==local, local pycrypto
+    print 'using pycrypt wooot woot'
 except:
     print 'pycrypt not available using slow decryption'
     USEDec=3 ## 1==crypto 2==local, local pycrypto
     
-USEDec=3 
-
 if USEDec==1:
     #from Crypto.Cipher import AES
     print 'using pycrypto'
