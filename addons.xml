@@ -20,10 +20,10 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.f4mTester" version="2.2.0" name="f4mTester" provider-name="Shani">
+<addon id="plugin.video.f4mTester" version="2.2.3" name="f4mTester" provider-name="Shani">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
-        <import addon="script.video.F4mProxy" version="2.1.7"/>
+        <import addon="script.video.F4mProxy" version="2.2.3"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>video</provides>
@@ -202,7 +202,7 @@
 
 <addon id="plugin.video.ZemTV-shani"
        name="ZemTV.com"
-       version="3.6.6"
+       version="3.7.0"
        provider-name="shani">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -212,7 +212,7 @@
        	<import addon="script.module.elementtree" version="1.2.8"/>
 
 
-    <import addon="plugin.video.f4mTester" version="2.1.7"/>
+    <import addon="plugin.video.f4mTester" version="2.2.3"/>
 
   </requires>
   <extension point="xbmc.python.pluginsource"
@@ -241,7 +241,7 @@
 
 <addon id="script.video.F4mProxy"
 	     name="F4mProxy"
-	     version="2.2.1"
+	     version="2.2.3"
 	     provider-name="Shani">
   <requires>
     <import addon="xbmc.python" version="2.1.0" />

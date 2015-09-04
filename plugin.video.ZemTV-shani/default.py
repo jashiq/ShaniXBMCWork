@@ -410,18 +410,18 @@ def GetSSSEvents(url):
         videoPage =  response.read()
         response.close()
         pat='setallLiveStreamsVideos\\(...({.*?})\\\\\"\\"\\);'
-        print videoPage
+#        print videoPage
         channels_string=re.findall(pat,videoPage)[0]
         channels_string=channels_string.replace('\\\\r','')
         channels_string=channels_string=channels_string.replace('\\\\n','')
         channels_string=channels_string.replace('\\\\','\\')
         channels_string=channels_string.replace('\\"','"')
         channels_string=channels_string.replace('\\"','"')
-        print channels_string
+#        print channels_string
         
-        print 'channels_string',channels_string
+#        print 'channels_string',channels_string
         channels = json.loads(channels_string)
-        print channels
+#        print channels
 
         
 #            sid=series["Id"]
@@ -446,9 +446,11 @@ def GetSSSEvents(url):
                 ptitle=channel["NowPlaying"]["EventNowPlaying"]
                 cname=channel["NowPlaying"]["Channel"]
                 link=channel["NowPlaying"]["Link"]
-
+                print ptitle, cname,link
+                if not link is None:
+                    if ptitle is None: ptitle=''
         #            addDir(cname ,'a',27,'', False, True,isItFolder=False)
-                addDir('  '+cname + ' ' + ptitle ,link,35,'', False, False,isItFolder=False)
+                    addDir(u'  '+cname + u' ' + ptitle ,link,35,'', False, False,isItFolder=False)
                                                                         
 
         except: traceback.print_exc(file=sys.stdout)
@@ -718,7 +720,7 @@ def PlaySSSEvent(url):
         maxbitrate_settings=selfAddon.getSetting('defualtSSSBitRate')
         if (not maxbitrate_settings=='') and 'Max' not in maxbitrate_settings:
             maxbitrate=maxbitrate_settings
-        finalUrl='plugin://plugin.video.f4mTester/?url=%s&maxbitrate=%s&name=%s'%(urllib.quote_plus(finalUrl),maxbitrate,str(name))
+        finalUrl='plugin://plugin.video.f4mTester/?url=%s&maxbitrate=%s&name=%s&swf=%s'%(urllib.quote_plus(finalUrl),maxbitrate,str(name),"AFe6zmDCNudrcFNyePaAzAn/KRT5ES99ql4SNqldM2I=")
     print 'finalUrl',finalUrl
 #    playlist = xbmc.PlayList(1)
 #    playlist.clear()
