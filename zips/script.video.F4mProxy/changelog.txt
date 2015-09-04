@@ -65,3 +65,7 @@ removed crypto reference
 
 [B]Version 2.2.5[/B]
 small bug
+
+[B]Version 2.2.6[/B]
+support local copy of pycrypto
+

@@ -26,6 +26,14 @@ try:
 except:
     print 'pycrypt not available using slow decryption'
     USEDec=3 ## 1==crypto 2==local, local pycrypto
+
+if not USEDec==1:
+    try:
+        from Crypto.Cipher import AES
+        USEDec=1 ## 1==crypto 2==local, local pycrypto
+        print 'using internal pycrypt wooot woot'
+    except: pass    
+    
     
 if USEDec==1:
     #from Crypto.Cipher import AES
