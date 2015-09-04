@@ -59,3 +59,6 @@ updated the retry
 
 [B]Version 2.2.3[/B]
 added akhds support for tag decrypt and pvtoken
+
+[B]Version 2.2.4[/B]
+removed crypto reference

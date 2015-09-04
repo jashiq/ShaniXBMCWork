@@ -29,7 +29,7 @@ __addonname__   = selfAddon.getAddonInfo('name')
 __icon__        = selfAddon.getAddonInfo('icon')
 downloadPath   = xbmc.translatePath(selfAddon.getAddonInfo('profile'))#selfAddon["profile"])
 F4Mversion=''
-from Crypto.Cipher import AES
+#from Crypto.Cipher import AES
 
 value_unsafe = '%+&;#'
 VALUE_SAFE = ''.join(chr(c) for c in range(33, 127)
@@ -698,11 +698,11 @@ class F4MDownloader():
             lookForTagStart = nextTag;
         return frames,remainingdata
     
-    def AES(self,key):
-        return Rijndael(key, keySize=16, blockSize=16, padding=padWithPadLen())
+#    #def AES(self,key):
+#        return Rijndael(key, keySize=16, blockSize=16, padding=padWithPadLen())
 
-    def AES_CBC(self,key):
-        return CBC(blockCipherInstance=AES(key))
+#    def AES_CBC(self,key):
+#        return CBC(blockCipherInstance=AES(key))
         
     def addBytesToOutput(self,prefix,data,post,segmentid,buffer):
         dataLen=0
