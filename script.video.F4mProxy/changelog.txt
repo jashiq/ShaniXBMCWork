@@ -69,3 +69,7 @@ small bug
 [B]Version 2.2.6[/B]
 support local copy of pycrypto
 
+[B]Version 2.2.7[/B]
+support pycrypto proxy on Android
+
+

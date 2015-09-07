@@ -21,6 +21,7 @@ import zlib
 from hashlib import sha256
 import cookielib
 import akhds
+
 #import youtube_dl
 #from youtube_dl.utils import *
 addon_id = 'script.video.F4mProxy'
@@ -731,10 +732,13 @@ class F4MDownloader():
         
     def keep_sending_video(self,dest_stream, segmentToStart=None, totalSegmentToSend=0):
         try:
-            self.status='download Starting'
+            self.status='download Starting'            
             self.downloadInternal(self.url,dest_stream,segmentToStart,totalSegmentToSend)
         except: 
             traceback.print_exc()
+        try:
+            akhds.cleanup()                                    
+        except:pass
         self.status='finished'
             
     def downloadInternal(self,url,dest_stream ,segmentToStart=None,totalSegmentToSend=0):
@@ -891,6 +895,7 @@ class F4MDownloader():
                                     frames,remainingFrameData=self.getFrames(box_data,remainingFrameData)
 #                                    print 'after frames data first frame', repr(frames[0][0:70])
                                     #print 'frames',frames
+                                    cleanup=False
 
                                     for frame in frames:
                                         
@@ -928,7 +933,9 @@ class F4MDownloader():
 #                                                print 'dataread',dataread,keyExistsNew,KeyNew,ignoreIV
 
                                                 try:    
+                                                    akhds.init()
                                                     data=akhds.tagDecrypt(data,keyData)
+                                                    
 
                                                 except:
                                                     print 'decryption error'
@@ -951,10 +958,11 @@ class F4MDownloader():
                                             #dest_stream.flush()
                                             #dest_stream.write(self.decryptData(data,keyData))
                                             #dest_stream.flush() 
-                                    
                                 except:
                                     print traceback.print_exc()
-                                    self.g_stopEvent.set()                                            
+                                    self.g_stopEvent.set()     
+                                    
+
                             else:
                                 dest_stream.write(box_data)
                                 dest_stream.flush()
