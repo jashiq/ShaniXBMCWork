@@ -17,7 +17,9 @@ def echo_client(conn):
     try:
         while True:
             msg = conn.recv()
+#            print msg
             if msg=="test":
+                print "sending resp"
                 conn.send("alive")
             if msg[:8]=="decrypt:":
             
@@ -40,7 +42,6 @@ def echo_client(conn):
 def echo_server(address, authkey):
     print 'loading server'
     print sys.executable
-    print site.getsitepackages()
     serv = Listener(address, authkey=authkey)
     print 'started listener'
     while True:
@@ -52,4 +53,4 @@ def echo_server(address, authkey):
         except Exception:
             traceback.print_exc()
 
-echo_server(('', 25353), authkey=b'pycryptoproxy')
+echo_server(('', 25353), authkey='')
