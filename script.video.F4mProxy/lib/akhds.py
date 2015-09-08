@@ -195,6 +195,8 @@ def tagDecrypt(data,key):
     de=getDecrypter(stage_4a_finalkey,global_iv )
     stage_4a_finaloutput=decryptData(de,stage_4a_finaldata,global_iv)
 #    print stage_4a_finaloutput
+    enc_size=stage_4a_finaloutput[:4]
+    enc_size=int(struct.unpack('>I',enc_size)[0])
     stage_4a_finaloutput=stage_4a_finaloutput[4:4+16]
 #    print 'final',binascii.hexlify(stage_4a_finaloutput)
 
@@ -222,13 +224,17 @@ def tagDecrypt(data,key):
     de=getDecrypter(stage_5_hmac,global_iv )
 
 #    print 'enc_data_index',enc_data_index
-    enc_data_todec=enc_data[enc_data_index:]
-    datatocut=len(enc_data_todec) % 16
+#    enc_data_todec=enc_data[enc_data_index:]
+#    datatocut=len(enc_data_todec) % 16
 #    print 'datatocut',datatocut
+    enc_data_todec=""
+    if enc_size>0:
+        enc_data_todec=enc_data[enc_data_index:enc_data_index+enc_size]
+    unEncdata=enc_data[enc_data_index+enc_size:]
 
-    unEncdata=enc_data_todec[-datatocut:]
+#    unEncdata=enc_data_todec[-datatocut:]
 #    print 'unEncdata',binascii.hexlify(unEncdata)
-    enc_data_todec=enc_data_todec[:len(enc_data_todec)-datatocut]
+#    enc_data_todec=enc_data_todec[:len(enc_data_todec)-datatocut]
     decData=""
     if len(enc_data_todec)>0:
 #        print 'enc_data_todec',binascii.hexlify(enc_data_todec), len(enc_data_todec)
