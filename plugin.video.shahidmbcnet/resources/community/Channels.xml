@@ -7071,7 +7071,14 @@
 	<category>maroc</category>
 	</assignedcategory>
 </channel>	
-
+<channel>
+	<cname>Al oula Maroc la3youne</cname>
+	<imageurl>http://s3.postimg.org/p9cfg9h8f/laayoune.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>maroc</category>
+	</assignedcategory>
+</channel>	
 <channel>
 	<cname>2M</cname>
 	<imageurl>http://i1064.photobucket.com/albums/u379/zombiB/2m_zps92ea421b.png</imageurl>
