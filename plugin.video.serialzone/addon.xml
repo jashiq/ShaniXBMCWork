@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.serialzone"
        name="India - SerialZone"
-       version="1.2"
+       version="1.3"
        provider-name="sorkan">
   <requires>
     	<import addon="xbmc.python" version="2.1.0"/>
 	<import addon="script.module.urlresolver" version="1.0.0"/>
+    <import addon="script.module.requests" />
+    <import addon="script.module.httplib2" />
 	<import addon="plugin.video.youtube" version="2.9.2"/>
   </requires>
   <extension point="xbmc.python.pluginsource"

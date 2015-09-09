@@ -5,6 +5,7 @@ import HTMLParser
 import xbmcaddon
 import time
 from operator import itemgetter
+import requests
 
 __addon__       = xbmcaddon.Addon()
 __addonname__   = __addon__.getAddonInfo('name')
@@ -76,13 +77,13 @@ def get_params():
 
 def Addtypes():
 	#2 is series=3 are links
-	addDir('Bengali' ,'http://bengali.serialzone.in', 2, '')
-	addDir('Hindi' ,'http://hindi.serialzone.in', 2,'')
-	addDir('Kannada' ,'http://kannada.serialzone.in' , 2,'')
-	addDir('Malayalam' ,'http://malayalam.serialzone.in', 2,'')
-	addDir('Marathi' ,'http://marati.serialzone.in', 2, '')
-	addDir('Tamil' ,'http://tamil.serialzone.in', 2, '')
-	addDir('Telugu' ,'http://telugu.serialzone.in', 2, '')
+	addDir('Bengali' ,'http://bengali.serialzone.in/', 2, '')
+	addDir('Hindi' ,'http://hindi.serialzone.in/', 2,'')
+	addDir('Kannada' ,'http://kannada.serialzone.in/' , 2,'')
+	addDir('Malayalam' ,'http://malayalam.serialzone.in/', 2,'')
+	addDir('Marathi' ,'http://marati.serialzone.in/', 2, '')
+	addDir('Tamil' ,'http://tamil.serialzone.in/', 2, '')
+	addDir('Telugu' ,'http://telugu.serialzone.in/', 2, '')
 	return
 
 
@@ -153,53 +154,59 @@ def AddTVChannels(Fromurl):
 
 
 def AddSeries(Fromurl):
-	#print "Incoming URL:",Fromurl
-        try:
-	   req = urllib2.Request(Fromurl)
-	   req.add_header('User-Agent','Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
-	   response = urllib2.urlopen(req)
-	   link=response.read()
-	   response.close()
-	except:
-           print "Error opening URL"
-	   return(0)
+    #print "Incoming URL:",Fromurl
+    try:
+#       req = urllib2.Request(Fromurl)
+#       req.add_header('User-Agent','Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
+#       response = urllib2.urlopen(req)
+#       link=response.read()
+#       response.close()
+       #using requests module as urllib2 not returning full page due to content size not being sent correctly from the server!
+       headers = {'user-agent': 'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10'}
+       r = requests.get(Fromurl,headers=headers)
+       
+       link=r.text
+    except:
+        print "Error opening URL"
+        return(0)
 
-	print link
-	print "addshows"
+    print link, len(link)
+    print "addshows"
 
-	regstring='<div class="serial">(.*?)<\/div>'
-	match_temp=re.findall(regstring, link)
-        print "Num elements: ",len(match_temp)
-        print "Match_items: ",match_temp
-	for entries in match_temp:
-	    # walk thru matched patterns to find sub-pattern
-	    print "MATCH ENTRY LEV1: ",entries
+    regstring='<div class="serial">(.*?)<\/div>'
+    match_temp=re.findall(regstring, link)
+
+    print "Num elements: ",len(match_temp)
+    print "Match_items: ",match_temp
+    for entries in match_temp:
+        # walk thru matched patterns to find sub-pattern
+        print "MATCH ENTRY LEV1: ",entries
             #idx1= entries.index('<img src=')
             #rint "INDEX1: %s" %idx1
             #mpl=entries[idx1:]
             #rint "TEMPL: %s" %templ
             #ntries=templ
-            subreg_str='<img src="(.*?)".*?<div class="title"><a href="(.*?)">(.*?)<\/a>'
-            match2=re.findall(subreg_str, entries)
-            print match2
+        subreg_str='<img src="(.*?)".*?<div class="title"><a href="(.*?)">(.*?)<\/a>'
+        match2=re.findall(subreg_str, entries)
+        print match2
 
-	    for cname in match2:
-		#print "LEV 2 match: ",cname
-		# ignore online games from showing on XBMC/KODI - take all other series info
-		URLI=cname[0]
-		if 'http:' not in URLI:
-		   URLI=Fromurl+cname[0]
-		else:
-		   URLI=cname[0]
+        for cname in match2:
+        #print "LEV 2 match: ",cname
+        # ignore online games from showing on XBMC/KODI - take all other series info
+            URLI=cname[0]
+            if 'http:' not in URLI:
+               URLI=Fromurl+cname[0]
+            else:
+               URLI=cname[0]
 
-		SHOWURL=cname[1]
-		SHOWURL+="?view=all"
-		if cname[2] not in ('The Kings League: Odyssey','TT Racer'):
-		   #print "Name:%s\nURLI:%s\nICON:%s\n" %(cname[2], SHOWURL, URLI)
-		   addDir(cname[2] , SHOWURL, 4, URLI)#url,name,jpg_name,url,mode,icon
-	    # end inner-loop
-	# end outer-loop
-	return
+            SHOWURL=cname[1]
+            SHOWURL+="?view=all"
+            if cname[2] not in ('The Kings League: Odyssey','TT Racer'):
+               #print "Name:%s\nURLI:%s\nICON:%s\n" %(cname[2], SHOWURL, URLI)
+               addDir(cname[2] , SHOWURL, 4, URLI)#url,name,jpg_name,url,mode,icon
+            # end inner-loop
+    # end outer-loop
+    return
 #end function
 
 
