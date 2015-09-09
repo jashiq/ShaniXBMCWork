@@ -23,6 +23,7 @@ from subprocess import Popen, PIPE
 import subprocess
 import struct
 import pickle
+import xbmc
 
 portNumber=25353
 authkey=b'pycryptoproxy'
@@ -32,9 +33,13 @@ USEDec=0
 initDone=False
 currentFolder=os.path.dirname(os.path.realpath(__file__))
 #python_path='C://Python2732Bit//python.exe'
-python_path='/data/data/com.googlecode.pythonforandroid/files/python/bin/python'
+appid="org.xbmc.kodi"
+python_path='/data/data/%s/files/script.video.F4mProxy/files/runscript.sh'%appid
 #may need to provide the exports!
 #print currentFolder
+#import sys
+#sys.path.insert(0, "/data/data/org.xbmc.kodi/files/script.video.F4mProxy/files/runscript.sh")
+print sys.path
 
 def send_msg(sock, msg):
     # Prefix each message with a 4-byte length (network byte order)
@@ -71,14 +76,14 @@ try:
     print 'using pycrypt wooot woot'
 except:
     print 'pycrypt not available trying other options'
+    print traceback.print_exc()
     USEDec=3 ## 1==crypto 2==local, local pycrypto
     #check if its android
     try:
-#        print 1/0
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         result = sock.connect_ex(('localhost',portNumber))
         sock.close()
-        if 1==2 and not result==0:
+        if not result==0:
             #run server
             print 'android server not running, trying to run'            
             filename=currentFolder+"/pyCryptoAndroid.py"
@@ -87,7 +92,9 @@ except:
             env=os.environ.copy()
             env["PYTHONPATH"]="";
             env["PYTHONHOME"]="";
-            popenProcess=Popen([python_path,filename],shell=False,stdin=None,stdout=None,stderr=None,close_fds=True,creationflags=DETACHED_PROCESS, env=env)
+            print python_path,filename
+            popenProcess=Popen(["sh",python_path,appid,filename])
+            xbmc.sleep(3000)
             print 'after popen'
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             result = sock.connect_ex(('localhost',portNumber))
@@ -194,9 +201,9 @@ def tagDecrypt(data,key):
 #    # pyaes.new(stage_4a_finalkey, pyaes.MODE_CBC, IV=global_iv)
     de=getDecrypter(stage_4a_finalkey,global_iv )
     stage_4a_finaloutput=decryptData(de,stage_4a_finaldata,global_iv)
-#    print stage_4a_finaloutput
     enc_size=stage_4a_finaloutput[:4]
     enc_size=int(struct.unpack('>I',enc_size)[0])
+#    print stage_4a_finaloutput
     stage_4a_finaloutput=stage_4a_finaloutput[4:4+16]
 #    print 'final',binascii.hexlify(stage_4a_finaloutput)
 
@@ -222,15 +229,15 @@ def tagDecrypt(data,key):
 #    de =AES.new(stage_5_hmac, AES.MODE_CBC, global_iv)
 #    #de = pyaes.new(stage_5_hmac, pyaes.MODE_CBC, IV=global_iv)
     de=getDecrypter(stage_5_hmac,global_iv )
+    enc_data_todec=""
+    if enc_size>0:
+        enc_data_todec=enc_data[enc_data_index:enc_data_index+enc_size]
+    unEncdata=enc_data[enc_data_index+enc_size:]
 
 #    print 'enc_data_index',enc_data_index
 #    enc_data_todec=enc_data[enc_data_index:]
 #    datatocut=len(enc_data_todec) % 16
 #    print 'datatocut',datatocut
-    enc_data_todec=""
-    if enc_size>0:
-        enc_data_todec=enc_data[enc_data_index:enc_data_index+enc_size]
-    unEncdata=enc_data[enc_data_index+enc_size:]
 
 #    unEncdata=enc_data_todec[-datatocut:]
 #    print 'unEncdata',binascii.hexlify(unEncdata)
