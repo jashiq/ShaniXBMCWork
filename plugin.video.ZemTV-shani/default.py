@@ -382,7 +382,7 @@ def AddSports(url):
     addDir('WatchCric.com (requires new rtmp)-Live matches only' ,base64.b64decode('aHR0cDovL3d3dy53YXRjaGNyaWMubmV0Lw==' ),16,'') #blocking as the rtmp requires to be updated to send gaolVanusPobeleVoKosat
     addDir('c247.tv-P3G.Tv (requires new rtmp)' ,'P3G'  ,30,'')
     addDir('Willow.Tv (login required)' ,base64.b64decode('aHR0cDovL3d3dy53aWxsb3cudHYv') ,19,'')
-    addDir('Super Sports' ,'sss',34,'')
+    addDir(base64.b64decode('U3VwZXIgU3BvcnRz') ,'sss',34,'')
     addDir('PV2 Sports' ,'sss',36,'')
     addDir('Streams' ,'sss',39,'')
     addDir('cricfree.sx' ,'sss',41,'')
@@ -402,7 +402,7 @@ def PlayPopeLive(url):
     
 def GetSSSEvents(url):
     try:
-        url='http://www.supersport.com/live-video'
+        url=base64.b64decode('aHR0cDovL3d3dy5zdXBlcnNwb3J0LmNvbS9saXZlLXZpZGVv')
         req = urllib2.Request(url)
         req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
         req.add_header('Cookie', 'User_IsMobile=False; supersportcookie=country=ZA&countryName=South Africa;')
@@ -707,7 +707,7 @@ def getMatchUrl(matchid):
 def PlaySSSEvent(url):
 
 
-    murl='http://www.supersport.com/video/playerlivejson.aspx?vid=%s'
+    murl=base64.b64decode('aHR0cDovL3d3dy5zdXBlcnNwb3J0LmNvbS92aWRlby9wbGF5ZXJsaXZlanNvbi5hc3B4P3ZpZD0lcw==')
     matchid=url.split('/')[-1]
     match_url=murl%matchid
     match_json=getUrl(match_url)
@@ -720,7 +720,7 @@ def PlaySSSEvent(url):
         maxbitrate_settings=selfAddon.getSetting('defualtSSSBitRate')
         if (not maxbitrate_settings=='') and 'Max' not in maxbitrate_settings:
             maxbitrate=maxbitrate_settings
-        finalUrl='plugin://plugin.video.f4mTester/?url=%s&maxbitrate=%s&name=%s&swf=%s'%(urllib.quote_plus(finalUrl),maxbitrate,str(name),"AFe6zmDCNudrcFNyePaAzAn/KRT5ES99ql4SNqldM2I=")
+        finalUrl='plugin://plugin.video.f4mTester/?url=%s&maxbitrate=%s&name=%s&swf=%s'%(urllib.quote_plus(finalUrl),maxbitrate,str(name),base64.b64decode("aHR0cDovL2NvcmUuZHN0di5jb20vdmlkZW8vZmxhc2gvUGxheWVyRFN0dlNTLnN3Zj92PTEuMTk="))
     print 'finalUrl',finalUrl
 #    playlist = xbmc.PlayList(1)
 #    playlist.clear()
