@@ -24,52 +24,18 @@ import subprocess
 import struct
 import pickle
 import xbmc
+import binascii
 
-portNumber=25353
-authkey=b'pycryptoproxy'
-popenProcess=None
-androidClient=None
+
 USEDec=0
 initDone=False
-currentFolder=os.path.dirname(os.path.realpath(__file__))
-#python_path='C://Python2732Bit//python.exe'
-appid="org.xbmc.kodi"
-python_path='/data/data/%s/files/script.video.F4mProxy/files/runscript.sh'%appid
-#may need to provide the exports!
-#print currentFolder
-#import sys
-#sys.path.insert(0, "/data/data/org.xbmc.kodi/files/script.video.F4mProxy/files/runscript.sh")
-print sys.path
 
-def send_msg(sock, msg):
-    # Prefix each message with a 4-byte length (network byte order)
-    msg=pickle.dumps(msg)
-    msg = struct.pack('>I', len(msg))+msg
-    sock.sendall(msg)
-
-def recv_msg(sock):
-    # Read message length and unpack it into an integer
-    raw_msglen = recvall(sock, 4)
-    if not raw_msglen:
-        return None
-    msglen = struct.unpack('>I', raw_msglen)[0]
-    # Read the message data
-    return pickle.loads(recvall(sock, msglen))
-
-def recvall(sock, n):
-    # Helper function to recv n bytes or return None if EOF is hit
-    data = ''
-    while len(data) < n:
-        packet = sock.recv(n - len(data))
-        if not packet:
-            return None
-        data += packet
-    return data    
 
 def init():
 #    global initDone, androidClient,USEDec,popenProcess,authkey,portNumber
 #    if initDone: return
     initDone=True
+
 try:
     from Crypto.Cipher import AES
     USEDec=1 ## 1==crypto 2==local, local pycrypto
@@ -79,55 +45,17 @@ except:
     print traceback.print_exc()
     USEDec=3 ## 1==crypto 2==local, local pycrypto
     #check if its android
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        result = sock.connect_ex(('localhost',portNumber))
-        sock.close()
-        if not result==0:
-            #run server
-            print 'android server not running, trying to run'            
-            filename=currentFolder+"/pyCryptoAndroid.py"
-            print filename
-            DETACHED_PROCESS = 0x00000008
-            env=os.environ.copy()
-            env["PYTHONPATH"]="";
-            env["PYTHONHOME"]="";
-            print python_path,filename
-            popenProcess=Popen(["sh",python_path,appid,filename])
-            xbmc.sleep(3000)
-            print 'after popen'
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            result = sock.connect_ex(('localhost',portNumber))
-            print 'android server result'+str(result)
-            sock.close()
-        if result==0:            
-            print 'server is running trying to connect as client',authkey,portNumber
-#            print dir(Client)
-#            androidClient = Client(('localhost', portNumber),authkey=authkey)
-            androidClient= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            result = androidClient.connect_ex(('localhost',portNumber))
-#           androidClient.send('test')
-            send_msg(androidClient,'test')
-            print 'sent'
-#            print androidClient.recv(5)
-            print recv_msg(androidClient)
+    if xbmc.getCondVisibility('System.Platform.Android'):
+        try:
+            import androidsslPy
+            AES=androidsslPy._load_crypto_libcrypto()
             USEDec=2 ## android
-            print 'using android woot woot'
-        else:
-            print 'android server not running'
-    except: 
-        print traceback.print_exc()
-        print 'local android copy not available'    
-
-print 'USEDec',USEDec
-if USEDec==1:
-    from Crypto.Cipher import AES
-    print 'using pycrypto'
-elif USEDec==2:
-    print 'using local android proxy'    
-else:
-    from utils import python_aes
-    print 'using slow decryption'  
+            print 'using android ssllib woot woot'
+        except: 
+            print traceback.print_exc()
+            print 'android copy not available'    
+            from utils import python_aes
+            print 'using slow decryption'  
     
 value_unsafe = '%+&;#'
 VALUE_SAFE = ''.join(chr(c) for c in range(33, 127)
@@ -143,8 +71,8 @@ def tagDecrypt(data,key):
     
 
     keydatalen=0
-    if 'key_' in enc_data[0:100]: #quick check?? need to find better way to predict offsets
-        keydatalen=enc_data[0:200].find(chr(0),13+16)-(13+16)+1
+    if 'key_' in enc_data[0:300]: #quick check?? need to find better way to predict offsets
+        keydatalen=enc_data[0:300].find(chr(0),13+16)-(13+16)+1
        
        
 #    print 'keydatalen',keydatalen       
@@ -199,8 +127,15 @@ def tagDecrypt(data,key):
     #import  pyaes   
 #    de =AES.new(stage_4a_finalkey, AES.MODE_CBC, global_iv)
 #    # pyaes.new(stage_4a_finalkey, pyaes.MODE_CBC, IV=global_iv)
+
+
+
     de=getDecrypter(stage_4a_finalkey,global_iv )
-    stage_4a_finaloutput=decryptData(de,stage_4a_finaldata,global_iv)
+    cc=global_iv
+    decresp=decryptData(de,stage_4a_finaldata,cc)
+    stage_4a_finaloutput=decresp[:20]
+
+
     enc_size=stage_4a_finaloutput[:4]
     enc_size=int(struct.unpack('>I',enc_size)[0])
 #    print stage_4a_finaloutput
@@ -228,31 +163,25 @@ def tagDecrypt(data,key):
 
 #    de =AES.new(stage_5_hmac, AES.MODE_CBC, global_iv)
 #    #de = pyaes.new(stage_5_hmac, pyaes.MODE_CBC, IV=global_iv)
-    de=getDecrypter(stage_5_hmac,global_iv )
+    de2=getDecrypter(stage_5_hmac,global_iv )
     enc_data_todec=""
     if enc_size>0:
         enc_data_todec=enc_data[enc_data_index:enc_data_index+enc_size]
     unEncdata=enc_data[enc_data_index+enc_size:]
 
-#    print 'enc_data_index',enc_data_index
-#    enc_data_todec=enc_data[enc_data_index:]
-#    datatocut=len(enc_data_todec) % 16
-#    print 'datatocut',datatocut
-
-#    unEncdata=enc_data_todec[-datatocut:]
-#    print 'unEncdata',binascii.hexlify(unEncdata)
-#    enc_data_todec=enc_data_todec[:len(enc_data_todec)-datatocut]
     decData=""
     if len(enc_data_todec)>0:
 #        print 'enc_data_todec',binascii.hexlify(enc_data_todec), len(enc_data_todec)
         #enc_data_remaining
-        decData=decryptData(de,enc_data_todec,global_iv)
+        decData=decryptData(de2,enc_data_todec,global_iv)
         
     decData+=unEncdata
-#    if len(decData)<300:
-#        print 'key received',binascii.hexlify(key), len(key)
-#        print 'data received',binascii.hexlify(data), len(data)
-#        print 'final return',binascii.hexlify(decData), len(decData)
+    if 1==2 and len(decData)<300:
+        print 'enc data received',binascii.hexlify(enc_data_todec), len(enc_data_todec)
+        print 'iv received',binascii.hexlify(global_iv), len(global_iv)
+        print 'key received',binascii.hexlify(stage_5_hmac), len(stage_5_hmac)
+        print 'data received',binascii.hexlify(data), len(data)
+        print 'final return',binascii.hexlify(decData), len(decData)
     return decData
 
 ## function to create the cbc decrypter object
@@ -265,40 +194,30 @@ def getDecrypter(key,iv):
         keyb= array.array('B',key)
         enc=python_aes.new(keyb, 2, ivb)
     else:
-        enc = binascii.hexlify(key)+':'+binascii.hexlify(iv) # dummy return, we must be using android here
+#        enc =androidsslPy._load_crypto_libcrypto()
+        enc = AES(key, iv)
     return  enc       
 
 ## function to create the cbc decrypter    
 def decryptData(d,encdata,iv):
-    global androidClient
 #    print 'start'
     global USEDec
-    if USEDec==1:
+    if USEDec==1 or USEDec==2:
         data =d.decrypt(encdata)
+#        print binascii.hexlify(data)
     elif USEDec==3:
         chunkb=array.array('B',encdata)
         data = d.decrypt(chunkb)
         data="".join(map(chr, data))
-    else:
-        # we must be using android
-        data='decrypt:'+d#+':'+binascii.hexlify(encdata)
-        send_msg(androidClient,data)
-        ok_msg=recv_msg(androidClient)
-#        print ok_msg, len(encdata)
-        send_msg(androidClient,encdata)
-        data= recv_msg(androidClient)
 #    print 'end'
     return  data       
     
 def cleanup():
-    global androidClient,popenProcess
     try:
-        if USEDec==2 and androidClient:
+        if USEDec==2:
             print 'doing android cleanup'
-            androidClient.close()
-            if popenProcess:
-                popenProcess.terminate()
-            print 'android cleanup'
+            #AndroidCrypto.teardown()
+            #print 'android cleanup'
     except:
         pass
 
