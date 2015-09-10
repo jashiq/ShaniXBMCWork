@@ -1430,23 +1430,7 @@
 	</assignedcategory>
 </channel>
 <channel>
-	<cname>.Live Event</cname>
-	<imageurl>http://www.samuitimes.com/wp-content/uploads/2013/07/live.jpg</imageurl>
-	<enabled>True</enabled>
-	<assignedcategory>
-	<category>sports</category>
-	</assignedcategory>
-</channel>
-<channel>
 	<cname>.Live Ustream</cname>
-	<imageurl>http://www.samuitimes.com/wp-content/uploads/2013/07/live.jpg</imageurl>
-	<enabled>True</enabled>
-	<assignedcategory>
-	<category>sports</category>
-	</assignedcategory>
-</channel>
-<channel>
-	<cname>.Live Youtube</cname>
 	<imageurl>http://www.samuitimes.com/wp-content/uploads/2013/07/live.jpg</imageurl>
 	<enabled>True</enabled>
 	<assignedcategory>
