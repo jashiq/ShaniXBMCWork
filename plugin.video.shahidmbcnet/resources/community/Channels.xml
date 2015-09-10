@@ -2581,6 +2581,7 @@
 	<enabled>True</enabled>
 	<assignedcategory>
 	<category>french</category>
+	<category>sports</category>
 	</assignedcategory>
 </channel>
 <channel>
@@ -5813,6 +5814,7 @@
 	<enabled>True</enabled>
 	<assignedcategory>
 	<category>french</category>
+	<category>sports</category>
 	</assignedcategory>
 </channel>	
 
