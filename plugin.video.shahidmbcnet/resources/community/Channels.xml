@@ -2560,6 +2560,15 @@
 	</assignedcategory>
 </channel>
 <channel>
+	<cname>Gtv Sports Plus</cname>
+	<imageurl>https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c7.0.200.200/p200x200/223194_284547261651613_137335363_n.png?oh=9ebd4e874b6cda0f9d78a29ff8f5e307&oe=5669780C&__gda__=1450061567_a2989c4d3775d44138bee8e74b97f6c7</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>africa</category>
+	<category>sports</category>
+	</assignedcategory>
+</channel>
+<channel>
 	<cname>Euronews fr</cname>
 	<imageurl>http://www.gwenael.org/xbmc-streams/images/channels/102.png</imageurl>
 	<enabled>True</enabled>
