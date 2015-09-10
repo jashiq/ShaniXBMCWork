@@ -3450,14 +3450,6 @@
 	<category>dzair</category>
 	</assignedcategory>
 </channel>
-<channel>
-	<cname>SPORT TIME</cname>
-	<imageurl>http://3.bp.blogspot.com/-F4oNbo2SQ9Q/UJaSuEgCS4I/AAAAAAAAL6s/etSeYt_sIog/s1600/sport-time-tv-logo.png</imageurl>
-	<enabled>True</enabled>
-	<assignedcategory>
-	<category>sports</category>
-	</assignedcategory>
-</channel>
 
 <channel>
 	<cname>FM TV</cname>
