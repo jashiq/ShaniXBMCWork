@@ -5769,6 +5769,13 @@
 	</item>
 </streaminginfo>
 <streaminginfo>
+	<cname>Cinema Pro</cname>
+	<item>
+	<title>HD</title>
+	<link>http://$GL-IPHD$:7777/AlHayatCinema_HD.m3u8?user=$GL-User$&amp;session=$GL-Sesession$</link>
+	</item>
+</streaminginfo>
+<streaminginfo>
 	<cname>Alhayat 1</cname>
 	<item>
 	<title>Proxy High</title>
