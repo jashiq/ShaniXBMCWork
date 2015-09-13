@@ -2213,7 +2213,7 @@
 	</item>
 </streaminginfo>
 <streaminginfo>
-	<cname>Tahrir</cname>
+	<cname>Ten</cname>
 	<item>
 	<title>Proxy HD</title>
 	<link>http://$GLProxyIP$:4500/channel.flv?server=$GL-IPHD$&amp;channel=Tahrir_HD&amp;port=2077&amp;user=$GL-User$&amp;session=$GL-Sesession$</link>
