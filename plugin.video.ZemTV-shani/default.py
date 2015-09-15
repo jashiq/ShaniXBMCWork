@@ -1146,7 +1146,7 @@ def AddChannelsFromOthers(cctype):
     if 1==1:
         try:
             patt='<channel><channel_number>.*?<channel_name>(.+?[^<])</channel_name><channel_type>(.+?)</channel_type>.*?[^<"]<channel_url>(.+?[^<])</channel_url>.*?</channel>'
-            url=base64.b64decode("aHR0cDovL2ZlcnJhcmlsYi5qZW10di5jb20vaW5kZXgucGhwLzJfNC9neG1sL2NoYW5uZWxfbGlzdA==")
+            url=base64.b64decode("aHR0cDovL2ZlcnJhcmlsYi5qZW10di5jb20vaW5kZXgucGhwLzJfNS9neG1sL2NoYW5uZWxfbGlzdA==")
             req = urllib2.Request(url)
             req.add_header('User-Agent', base64.b64decode('VmVyaXNtby1CbGFja1VJ'))
             response = urllib2.urlopen(req)
@@ -1356,7 +1356,7 @@ def PlayPV2Link(url):
     
 def PlayOtherUrl ( url ):
     url=base64.b64decode(url)
-    if url.startswith('cid:'): url=base64.b64decode('aHR0cDovL2ZlcnJhcmlsYi5qZW10di5jb20vaW5kZXgucGhwLzJfNC9neG1sL3BsYXkvJXM=')%url.replace('cid:','')
+    if url.startswith('cid:'): url=base64.b64decode('aHR0cDovL2ZlcnJhcmlsYi5qZW10di5jb20vaW5kZXgucGhwLzJfNS9neG1sL3BsYXkvJXM=')%url.replace('cid:','')
     progress = xbmcgui.DialogProgress()
     progress.create('Progress', 'Fetching Streaming Info')
     progress.update( 10, "", "Finding links..", "" )

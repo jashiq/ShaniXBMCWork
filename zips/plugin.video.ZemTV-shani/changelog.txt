@@ -1,3 +1,6 @@
+[B]Version 3.7.2[/B]
+changed url
+
 [B]Version 3.7.1[/B]
 using swf now
 
