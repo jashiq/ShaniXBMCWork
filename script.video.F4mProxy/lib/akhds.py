@@ -38,6 +38,7 @@ def init():
 
 try:
     from Crypto.Cipher import AES
+    print 1/0
     USEDec=1 ## 1==crypto 2==local, local pycrypto
     print 'using pycrypt wooot woot'
 except:
@@ -56,7 +57,11 @@ except:
             print 'android copy not available'    
             from utils import python_aes
             print 'using slow decryption'  
-    
+    else:
+        print 'using slow decryption'  
+        from utils import python_aes
+
+
 value_unsafe = '%+&;#'
 VALUE_SAFE = ''.join(chr(c) for c in range(33, 127)
     if chr(c) not in value_unsafe)
@@ -194,8 +199,8 @@ def getDecrypter(key,iv):
         keyb= array.array('B',key)
         enc=python_aes.new(keyb, 2, ivb)
     else:
-#        enc =androidsslPy._load_crypto_libcrypto()
-        enc = AES(key, iv)
+        enc =androidsslPy._load_crypto_libcrypto()
+        enc = enc(key, iv)
     return  enc       
 
 ## function to create the cbc decrypter    
