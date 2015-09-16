@@ -38,7 +38,7 @@ def init():
 
 try:
     from Crypto.Cipher import AES
-    print 1/0
+
     USEDec=1 ## 1==crypto 2==local, local pycrypto
     print 'using pycrypt wooot woot'
 except:
