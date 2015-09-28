@@ -76,7 +76,8 @@ support pycrypto proxy on Android
 using libcrypto so file on Android
 [B]Version 2.2.9[/B]
 Default back to slow aes
-
+[B]Version 2.3.0[/B]
+ondemand load
 
 
 
