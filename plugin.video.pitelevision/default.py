@@ -59,7 +59,7 @@ DIR_USERDATA   = xbmc.translatePath(selfAddon.getAddonInfo('profile'))#selfAddon
 
 COOKIEFILE = DIR_USERDATA+'/PiTVLoginCookie.lwp'  
  
-mainurl='http://www.pitelevision.com'
+mainurl='http://www.pitelevision.com/international/'
 
 
 
@@ -69,32 +69,25 @@ def Addtypes():
 
 def getMainMenu():
     list=[]
-    list.append({'name':'Video On Demand','url':'http://www.pitelevision.com/index.php?option=com_allvideoshare&view=category&slg=on-demand&orderby=default&lang=en','mode':'VOD'})
-    list.append({'name':'All Live Channels','url':'http://www.pitelevision.com/index.php?option=com_allvideoshare&view=category&slg=all-channels&orderby=default&Itemid=142&lang=en','mode':'ALLC'})
+    list.append({'name':'Video On Demand','url':'http://cat','mode':'VOD'})
+    list.append({'name':'Live Channels','url':'http://pitelevision.com/international/channels.php','mode':'ALLC'})
     list.append({'name':'Settings','url':'Settings','mode':'Settings','isFolder':False})
     #print list;
     return list;
 
+    
+
+    
 def AddVOD(Fromurl,mode):
     parseList(getVODList(Fromurl,mode));#caching here
 
 def getVODList(Fromurl,mode):
 
-    link=getURL(Fromurl).result
-    regstring='<div class="a.*href="(.*)"\'>\s*.*<h2><span>(.*?)<.*\s*.*src="(.*?)"'
-    match =re.findall(regstring, link)
-    #print match
-    
     listToReturn=[]
-    for cname in match:
-        if mode=='VOD':
-            modeToUse='VODSerial'; # series, 4=enteries
-            if 'Music' in cname[1] or 'Films' in cname[1] or 'Telefilms' in cname[1] or 'Entertainment' in cname[1]:
-                modeToUse='VODEntry'
-        else:
-            modeToUse='VODEntry';
-        #print modeToUse,cname[1]
-        listToReturn.append({'name':cname[1],'url':mainurl+cname[0],'mode':modeToUse,'iconimage':cname[2].replace(' ','%20')})
+    listToReturn.append({'name':'Dramas','url':'http://pitelevision.com/international/vodlist.php?vodCatId=1&page=1','mode':'VOD-Dramas','iconimage':''})
+    listToReturn.append({'name':'Movies','url':'http://pitelevision.com/international/vodlist.php?vodCatId=3&page=1','mode':'VOD-Movies','iconimage':''})
+    listToReturn.append({'name':'Shows','url':'http://pitelevision.com/international/vodlist.php?vodCatId=4&page=1','mode':'VOD-Shows','iconimage':''})
+    listToReturn.append({'name':'Music Videos','url':'http://pitelevision.com/international/vodlist.php?vodCatId=5&page=1','mode':'VOD-Music','iconimage':''})
     return listToReturn;
 
 	
@@ -105,43 +98,105 @@ def ShowSettings(Fromurl):
     selfAddon.openSettings()
 
 
+def AddLiveEnteries(Fromurl,PageNumber,mode):
+    parseList(getLiveEnteriesList(Fromurl,PageNumber,mode));#caching here
+    
+
+def getLiveEnteriesList(Fromurl,PageNumber,mode):
+
+    if shouldforceLogin():
+        print 'performing login'
+#    link=getURL(Fromurl,cookieJar=getCookieJar())
+    link=getUrl(Fromurl,cookieJar=getCookieJar())
+    #print 'getEnteriesList',link
+    patt='<a href="(.*?)".*?title="(.*?)".*\s*.*img src="(.*?)"'
+    match =re.findall(patt, link)
+    #print 'match',match
+    listToReturn=[]
+    rmode='PlayLive'
+    for cname in match:
+        imageurl=cname[2].replace(' ','%20');
+        url=cname[0];
+        
+        if not imageurl.startswith('http'): imageurl=mainurl+'/'+imageurl
+        if not url.startswith('http'): url=mainurl+url
+        #print imageurl    
+        listToReturn.append({'name':cname[1],'url':url,'mode':rmode,'iconimage':imageurl,'isFolder':False})
+    return listToReturn
+
 def AddEnteries(Fromurl,PageNumber,mode):
     parseList(getEnteriesList(Fromurl,PageNumber,mode));#caching here
     
 def getEnteriesList(Fromurl,PageNumber,mode):
     link=getURL(Fromurl).result;
     #print 'getEnteriesList',link
-    match =re.findall('<div class="a.*href="(.*)"\'>\s*.*\s*.*src="(.*?)".*\s*.*?>(.*?)<', link)
-    #print 'match',match
+    
+    
     listToReturn=[]
+    
+
+    links=link.split('<div class="col-md-12">')
     rmode='PlayVOD';
-    if mode=='ALLC':
-        rmode='PlayLive'
-    for cname in match:
-        #print cname[2]
-        #addDir(cname[2] ,mainurl+cname[0] ,5,cname[1],isItFolder=False)
-        imageurl=cname[1].replace(' ','%20');
-        url=cname[0];
-        
-        if not imageurl.startswith('http'): imageurl=mainurl+'/'+imageurl
-        if not url.startswith('http'): url=mainurl+url
-        #print imageurl    
-        listToReturn.append({'name':cname[2],'url':url,'mode':rmode,'iconimage':imageurl,'isFolder':False})
+    for lnk in links:
+        if '<h1>' in lnk:
+            pat='<h1>(.*?)<\/h1>'
+#            print lnk
+            SName=re.findall(pat,lnk)[0]
+            match =re.findall('<a href="(.*)" class="ajax"><img src="(.*?)".*?\s*.*title">(.*?)<', lnk)
+            listToReturn.append({'name':SName,'url':'http://ignoreme','mode':'ignore','iconimage':'http://ignoreme','isFolder':False})
+            for cname in match:
+                #print cname[2]
+                #addDir(cname[2] ,mainurl+cname[0] ,5,cname[1],isItFolder=False)
+                imageurl=cname[1].replace(' ','%20');
+                url=cname[0];
+                
+                if not imageurl.startswith('http'): imageurl=mainurl+'/'+imageurl
+                if not url.startswith('http'): url=mainurl+url
+                #print imageurl    
+                listToReturn.append({'name':'  '+cname[2],'url':url,'mode':rmode,'iconimage':imageurl,'isFolder':False})
+    if 'Page ' in link:
+#        print 'ppppppppppppppppppage'
+        try:
+            patt='Page ([0-9]*) of ([0-9]*)'
+            match =re.findall(patt, link)
+            currentPage=match[0][0]
+            lastPage=match[0][1]
+#            print 'currentPage',currentPage
+            url=Fromurl;
+            nextPage=''
+            previousPage=''
+            prevurl=''
+            if not currentPage==lastPage:
+                nextPage='>>Next Page'
+                nextPageNum=int(currentPage)+1
+                nexturl= url.split('page=')[0]+'page='+str(nextPageNum)
+            if not currentPage=="1":
+                previousPage='<<<< Previous Page'
+                nextPageNum=int(currentPage)-1
+                prevurl= url.split('page=')[0]+'page='+str(nextPageNum)
 
-    match =re.findall('<span class="pagenav">Next</span></li', link)
-    match2 =re.findall('next', link)
-    if len(match)==0 and len(match2)>0:
-        url=Fromurl;
-        if len(PageNumber)>0:
-            pNumber=str(int(PageNumber) + 16)
-        else:
-            pNumber='16'
-        if 'limitstart' in url:
-            url =url.split("&limitstart")[0]
-        url+="&limitstart="+pNumber
-        #addDir('Next Page' , url ,4,'',pageNum=pNumber)
+            p='Page %s of %s'
+            p=p%(currentPage,lastPage)
+            currentpage='[COLOR FF11b500]'+p+'[/COLOR]'
+            
+            prevpage='[COLOR FF11b500]'+previousPage+'[/COLOR]'
+            #addDir('Next Page' , url ,4,'',pageNum=pNumber)
 
-        listToReturn.append({'name':'Next Page','url':url,'mode':mode,'iconimage':''})
+            listToReturn.insert(0,{'name': currentpage,'url':nexturl,'mode':'null','iconimage':''})
+            listToReturn.append({'name': currentpage,'url':nexturl,'mode':'null','iconimage':''})                
+
+            if not nextPage=='':
+                nextpage='[COLOR FF11b500]'+nextPage+'[/COLOR]'
+                listToReturn.insert(1,{'name': nextpage,'url':nexturl,'mode':mode,'iconimage':''})
+                listToReturn.append({'name': nextpage,'url':nexturl,'mode':mode,'iconimage':''})
+            
+            if not prevurl=='':
+                listToReturn.insert(1,{'name': prevpage,'url':prevurl,'mode':mode,'iconimage':''})
+                listToReturn.append({'name': prevpage,'url':prevurl,'mode':mode,'iconimage':''})
+
+            
+            
+        except: traceback.print_exc()
     return listToReturn
 	
 def PlayShowLink ( url, name ): 
@@ -183,39 +238,16 @@ def getShowUrl(url):
     line1="Fetching URL";
     timeWait=2000
     xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, timeWait, __icon__))
-
-    link=getURL(url).result;
-    match= re.findall('<param name="flashvars" .*?vid=(.*?)&amp*.?pid=(.*?)"', link)
-    vidId=match[0][0]
-    pid=match[0][1]
-    url="http://www.pitelevision.com/index.php?option=com_allvideoshare&view=config&vid=%s&pid=%s&lang=en"%(vidId,pid)
-    #print 'url',url
-    link=getURL(url).result;
-    #	print url
-    match= re.findall('<video>(.*?)<', link)
-    #print 'lowmatch', match
-    lowLink=''
-    if len(match)>0:
-        lowLink=match[0]
-    match= re.findall('<hd>(.*?)<', link)
-    hdLink=''
-    if len(match)>0:
-        hdLink=match[0]
-		
-    print 'Low and HD Link',lowLink,hdLink
-    urlToPlay=''
-    if len(hdLink)>0:
-        urlToPlay=hdLink
-	
-    if len(urlToPlay)<=0:
-        urlToPlay=lowLink
+    if shouldforceLogin():
+        print 'performing login'
+        
+    link=getUrl(url,cookieJar=getCookieJar())
+    match= re.findall('url:"(.*?)"', link)
+    urlToPlay=match[0]
     urlToPlay=urlToPlay.replace(" ","%20")
     
     return {'url':urlToPlay}
     
-	
-		
-    return
     
 def getCookieJar():
 	cookieJar=None
@@ -235,7 +267,7 @@ def getCookieJar():
     
 def shouldforceLogin(cookieJar=None, currentPage=None):
     try:
-        url=mainurl+'/index.php?lang=en'
+        url=mainurl+'/index.php'
         if not cookieJar:
             cookieJar=getCookieJar()
         if currentPage==None:
@@ -244,7 +276,7 @@ def shouldforceLogin(cookieJar=None, currentPage=None):
             html_txt=currentPage
             print 'html_txt',currentPage
             
-        if '<p id="form-login-username">' in html_txt:
+        if 'Login / Sign up' in html_txt:
             return True
         else:
             return False
@@ -272,15 +304,13 @@ def performLogin():
     cookieJar=cookielib.LWPCookieJar()
     userName=selfAddon.getSetting( "piTvLogin" )
     password=selfAddon.getSetting( "piTvPwd")
-    link=getUrl('http://www.pitelevision.com/index.php?lang=en',cookieJar=cookieJar)
-    patt='value="(.*?)".*\s*<input type="hidden" name="(.*)" value="1".*<\/fieldset>'
-    ret_val,enc=re.findall(patt, link)[0]
 
-    post={'username':userName,'password':password,'Submit':'Log in','option':'com_users','task':'user.login','return':ret_val,enc:'1'}
-    print 'post',post
+
+    post={'username':userName,'password':password}
+
     post = urllib.urlencode(post)
 
-    link=getUrl('http://www.pitelevision.com/index.php?option=com_users&lang=en',post=post, cookieJar=cookieJar)
+    link=getUrl('http://pitelevision.com/international/include/login.php',post=post, cookieJar=cookieJar)
     
     cookieJar.save (COOKIEFILE,ignore_discard=True)
     #return shouldforceLogin(cookieJar, link)==False
@@ -300,11 +330,11 @@ def getLiveUrl(url):
     pDialog.update(70, 'Fetching Live URL')          
 
 
-    #print 'fetching url',url
+#    print 'fetching url',url
     link=getUrl(url,cookieJar=getCookieJar())
     pDialog.update(90, 'Fetching Live URL')   
-    match= re.findall('flashvars="src=(.*?)&', link)
-    print 'match',match
+    match= re.findall('url:"(.*?.f4m.*?)"', link)
+#    print 'match',match
     url=""
     if len(match)>0:
 
@@ -338,7 +368,7 @@ def PlayLiveLink ( url,name ):
         #print "playing stream name: " + str(name) 
         #xbmc.Player( xbmc.PLAYER_CORE_AUTO ).play( playfile, listitem)
         print 'playfile',playfile
-        proxy=getProxy()
+        proxy=None#getProxy()
         if proxy:
             line1="using proxy %s"%proxy;
             timeWait=2000
@@ -539,14 +569,17 @@ try:
         print "InAddTypes"
         Addtypes()
 
-    elif mode=='VOD' or mode=='VODSerial':
+    elif mode=='VOD':
         print "AddVOD url is ",name,url
         AddVOD(url,mode) #adds series as well as main VOD section, both are cat.
 
-    elif mode=='VODEntry' or mode=='ALLC':
+    elif 'VOD-' in mode:
         print " AddEnteries Play url is "+url
         AddEnteries(url,PageNumber, mode)
-
+    elif mode=='ALLC':
+        print " AddEnteries Play url is "+url
+        AddLiveEnteries(url,PageNumber, mode)
+        
     elif mode=='PlayVOD':
         print " PlayShowLink Play url is "+url
         
@@ -569,7 +602,10 @@ if (not mode==None) and mode>1:
         #print 'Container.SetViewMode(%d)' % view_mode_id
         xbmc.executebuiltin('Container.SetViewMode(%d)' % view_mode_id)
    
-if not (mode=='PlayVOD' or  mode=='PlayLive' or mode=='Settings'): 
+if not mode==None and 'VOD-' in mode:
+    print 'update listing'
+    xbmcplugin.endOfDirectory(int(sys.argv[1]),updateListing=True)
+elif not (mode=='PlayVOD' or  mode=='PlayLive' or mode=='Settings'): 
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 

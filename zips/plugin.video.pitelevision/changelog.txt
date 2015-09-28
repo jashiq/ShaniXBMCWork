@@ -29,3 +29,6 @@
 
 [B]Version 1.5.2[/B]
 - FILE BUG
+
+[B]Version 1.6[/B]
+- Updated the links as the site is accessible to international users
