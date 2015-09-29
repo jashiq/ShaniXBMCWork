@@ -32,9 +32,7 @@ from SocketServer import ThreadingMixIn
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from urllib import *
 import urlparse
-from f4mDownloader import F4MDownloader
-from interalSimpleDownloader import interalSimpleDownloader
-from hlsDownloader import HLSDownloader
+
 import xbmc
 import thread
 import zlib
@@ -70,6 +68,8 @@ class MyHandler(BaseHTTPRequestHandler):
     def answer_request(self, sendData):
         global g_stopEvent
         global g_downloader
+
+
         try:
 
             #Pull apart request path
@@ -102,6 +102,7 @@ class MyHandler(BaseHTTPRequestHandler):
                 #downloader=g_downloader
                 
                 if not downloader or downloader.live==True or  not (downloader.init_done and downloader.init_url ==url):
+                    from f4mDownloader import F4MDownloader
                     downloader=F4MDownloader()
                     if not downloader.init(self.wfile,url,proxy,use_proxy_for_chunks,g_stopEvent,maxbitrate,auth,swf):
                         print 'cannot init'
@@ -164,6 +165,7 @@ class MyHandler(BaseHTTPRequestHandler):
                     srange=None
                     
             elif streamtype=='SIMPLE' or simpledownloader :
+                from interalSimpleDownloader import interalSimpleDownloader
                 downloader=interalSimpleDownloader();
                 if not downloader.init(self.wfile,url,proxy,g_stopEvent,maxbitrate):
                     print 'cannot init'
@@ -174,6 +176,7 @@ class MyHandler(BaseHTTPRequestHandler):
                 self.send_header("Content-Type", rtype)
                 srange=None
             elif streamtype=='HLS' or simpledownloader :
+                from hlsDownloader import HLSDownloader
                 downloader=HLSDownloader()
                 if not downloader.init(self.wfile,url,proxy,use_proxy_for_chunks,g_stopEvent,maxbitrate,auth):
                     print 'cannot init'
