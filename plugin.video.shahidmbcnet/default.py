@@ -215,7 +215,8 @@ def Addtypes():
 	addDir('Shahid Live' ,'CCats' ,14,addonArt+'/Network-1-icon.png')
 	#2 is series=3 are links
 	addDir('Shahid Vod by Channels' ,getMainUrl()+'/ar/channel-browser.html' ,2,addonArt+'/channels.png') #links #2 channels,3 series,4 video entry, 5 play
-	addDir('Shahid Vod by Series' ,getMainUrl()+'/ar/series-browser.html' ,6,addonArt+'/serial.png')
+	addDir('Shahid Serieses' ,getMainUrl()+'/ar/series-browser.html' ,6,addonArt+'/serial.png')
+	addDir('Shahid Shows' ,getMainUrl()+'/ar/show-browser.html' ,6,addonArt+'/serial.png')
 ##stopping it as currently its Drmd!
 ##	addDir('Shahid Vod Films' ,getMainUrl()+'/ar/movies.html' ,27,addonArt+'/serial.png')
 
