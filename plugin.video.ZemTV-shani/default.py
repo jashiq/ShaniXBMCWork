@@ -913,7 +913,7 @@ def AddSmartCric(url):
                         cname=s["caption"]
                         curl=s["streamName"]
                         streamid=str(s["streamId"])
-                        curl1="http://"+fms+":8088/mobile/"+curl+"/playlist.m3u8?id="+streamid+"&key="+match_sn+match_pk;
+                        curl1="http://"+fms+":8088/mobile/"+curl+"/playlist.m3u8?id="+streamid+match_pk;
                         addDir('    -'+cname +" (http)" ,curl1 ,15,'', False, True,isItFolder=False)		#name,url,mode,icon
                         #curl1="rtsp://"+"206.190.140.164"+":1935/mobile/"+curl+"?key="+match_sn+match_pk;
                         #curl1="rtsp://"+fms+":1935/mobile/"+curl+"?id="+streamid+"&key="+match_sn+match_pk;
