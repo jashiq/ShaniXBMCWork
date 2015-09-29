@@ -106,6 +106,8 @@ def getLiveEnteriesList(Fromurl,PageNumber,mode):
 
     if shouldforceLogin():
         print 'performing login'
+        if not performLogin():
+            print 'login failed'
 #    link=getURL(Fromurl,cookieJar=getCookieJar())
     link=getUrl(Fromurl,cookieJar=getCookieJar())
     #print 'getEnteriesList',link
@@ -240,6 +242,8 @@ def getShowUrl(url):
     xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, timeWait, __icon__))
     if shouldforceLogin():
         print 'performing login'
+        if not performLogin():
+            print 'login failed'
         
     link=getUrl(url,cookieJar=getCookieJar())
     match= re.findall('url:"(.*?)"', link)
