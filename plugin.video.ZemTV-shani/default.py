@@ -388,10 +388,65 @@ def AddSports(url):
     addDir('cricfree.sx' ,'sss',41,'')
 
     
+def PlayCricHD(url):
+
+    req = urllib2.Request(url)
+    req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
+    response = urllib2.urlopen(req)
+    videoPage =  response.read()
+    response.close()
+    pat='<iframe frameborder="0".*?src="(.*?)" name="iframe_a"'
+    matc=re.findall(pat,videoPage)
+    newurl=matc[0]
+    if len(matc)>1:
+        newurl=matc[1]
+    
+    
+    req = urllib2.Request(newurl)
+    req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
+    response = urllib2.urlopen(req)
+    videoPage =  response.read()
+    response.close()
+    if 'scripts/p3g.js' in videoPage:
+        PlayWatchCric(newurl)
+        return 
+    
+    pat='fid="(.*?)".*width=([0-9]*).*?height=([0-9]*)'
+    fid,wid,ht=re.findall(pat,videoPage)[0]
+    
+    newurl2="http://www.yocast.tv/embedcr.php?live=%s&vw=%s&vh=%s"%(fid,wid,ht)
+    
+    req = urllib2.Request(newurl2)
+    req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
+    req.add_header('Referer', newurl)
+    
+    response = urllib2.urlopen(req)
+    videoPage =  response.read()
+    response.close()
+    fpat='file:.?.?"(.*?)"'
+    spat='streamer:.?.?"(.*?)"'
+    
+    fi=re.findall(fpat,videoPage)[0]
+    streamer=re.findall(spat,videoPage)[0]
+    
+
+    
+
+    playlist = xbmc.PlayList(1)
+    #url='rtmp://rtmp.popeoftheplayers.pw:1935/redirect playpath='+url+base64.b64decode('IHN3ZlZmeT10cnVlIHN3ZlVybD1odHRwOi8vcG9wZW9mdGhlcGxheWVycy5wdy9hdGRlZGVhZC5zd2YgZmxhc2hWZXI9V0lOXDIwMTYsMCwwLDIzNSBwYWdlVXJsPWh0dHA6Ly9wb3Blb2Z0aGVwbGF5ZXJzLnB3L2F0ZGVkZWFkLnN3ZiBsaXZlPXRydWUgdGltZW91dD0yMCB0b2tlbj0jYXRkJSMkWkg=')
+    url='%s playpath=%s pageUrl=%s'%(streamer,fi.split('.flv')[0],newurl2)+' live=true timeout=20'
+
+    playlist.clear()
+    listitem = xbmcgui.ListItem( label = str(name), iconImage = "DefaultVideo.png", thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ) )
+    playlist.add(url,listitem)
+    xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
+    xbmcPlayer.play(playlist) 
+
+##not in use        
 def PlayPopeLive(url):
     playlist = xbmc.PlayList(1)
     #url='rtmp://rtmp.popeoftheplayers.pw:1935/redirect playpath='+url+base64.b64decode('IHN3ZlZmeT10cnVlIHN3ZlVybD1odHRwOi8vcG9wZW9mdGhlcGxheWVycy5wdy9hdGRlZGVhZC5zd2YgZmxhc2hWZXI9V0lOXDIwMTYsMCwwLDIzNSBwYWdlVXJsPWh0dHA6Ly9wb3Blb2Z0aGVwbGF5ZXJzLnB3L2F0ZGVkZWFkLnN3ZiBsaXZlPXRydWUgdGltZW91dD0yMCB0b2tlbj0jYXRkJSMkWkg=')
-    url='rtmp://rtmp.popeoftheplayers.eu:1935/redirect playpath='+url+base64.b64decode('IHN3ZlZmeT10cnVlIHN3ZlVybD1odHRwOi8vcG9wZW9mdGhlcGxheWVycy5ldS9hdGRlZGVhZC5zd2YgZmxhc2hWZXI9V0lOXDIwMTYsMCwwLDIzNSBwYWdlVXJsPWh0dHA6Ly9wb3Blb2Z0aGVwbGF5ZXJzLmV1L2F0ZGVkZWFkLnN3ZiBsaXZlPXRydWUgdGltZW91dD0yMCB0b2tlbj0jYXRkJSMkWkg=')
+    url='rtmp://rtmp.popeoftheplayers.eu:1935/redirect playpath='+url+base64.b64decode(' swfVfy=true swfUrl=http://popeoftheplayers.eu/atdedead.swf flashVer=WIN\2016,0,0,235 pageUrl=http://popeoftheplayers.eu/atdedead.swf live=true timeout=20 token=#atd%#$ZH')
 
     playlist.clear()
     listitem = xbmcgui.ListItem( label = str(name), iconImage = "DefaultVideo.png", thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ) )
@@ -483,7 +538,56 @@ def AddStreamSports(url=None):
                 cname+=" :" + source["Liga"].encode('ascii','ignore')
             cid=source["VI"]
             addDir(cname ,base64.b64encode(cid),40,'', False, True,isItFolder=False)            
+
             
+def AddCricHD(url):
+    try:
+        url="http://www.crichd.tv/"
+        req = urllib2.Request(url)
+        req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
+        response = urllib2.urlopen(req)
+        videoPage =  response.read()
+        response.close()
+        pat='<a class="menuitem" href="(.*?)".*?img src="(.*?)".*?alt="(.*?)"'
+        channels=re.findall(pat,videoPage)
+#        print channels
+#        channels=[('Sky Sports 1','1'),('Sky Sports 2','2'),('Sky Sports 3','3'),('Sky Sports 4','4'),('Sky Sports 5','5'),('Sky Sports F1','6') ,('BT Sport 1','7'),('BT Sports 2','8') ,('Willow Cricket','24') ,('Ptv Sports','15')   ]
+        for channel in channels:
+            print channel
+            cname=channel[2]
+            cid=channel[0]
+            cimg=channel[1]
+            
+            if not cid.startswith('http'):cid=url+cid
+            if not cimg.startswith('http'):cimg=url+cimg
+
+#            addDir(cname ,'a',27,'', False, True,isItFolder=False)
+            print 'adding'
+            addDir(cname ,cid,27,cimg, False, True,isItFolder=False)
+
+        pat='<b><a class="menuitem" href="(.*?)"><font size="4">(.*?)<'
+        channels=re.findall(pat,videoPage)
+#        print channels
+#        channels=[('Sky Sports 1','1'),('Sky Sports 2','2'),('Sky Sports 3','3'),('Sky Sports 4','4'),('Sky Sports 5','5'),('Sky Sports F1','6') ,('BT Sport 1','7'),('BT Sports 2','8') ,('Willow Cricket','24') ,('Ptv Sports','15')   ]
+        for channel in channels:
+            print channel
+            cname=channel[1]
+            cid=channel[0]
+            cimg=""#;channel[2]
+            
+            if not cid.startswith('http'):cid=url+cid
+            if not cimg.startswith('http'):cimg=url+cimg
+
+#            addDir(cname ,'a',27,'', False, True,isItFolder=False)
+            print 'adding'
+            addDir(cname ,cid,27,cimg, False, True,isItFolder=False)
+            
+
+
+    except: traceback.print_exc(file=sys.stdout)
+    
+
+#not in use
 def AddPopeLive(url):
     try:
 #        req = urllib2.Request(url)
@@ -940,7 +1044,7 @@ def PlayWatchCric(url):
     progress.create('Progress', 'Fetching Streaming Info')
     progress.update( 10, "", "Finding links..", "" )
     pat_ifram='<iframe.*?src=(.*?).?"?>'    
-    if 'c247.tv' not in url:
+    if 'c247.tv' not in url and 'crichd.tv' not in url:
         req = urllib2.Request(url)
         req.add_header('User-Agent', 'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
         response = urllib2.urlopen(req)
@@ -993,7 +1097,7 @@ def PlayWatchCric(url):
         pat_e='channel.*?g=\'(.*?)\''
         app='live'
         pat_js='channel=\'(.*?)\''
-    elif 'c247.tv' in link:
+    elif 'c247.tv' or 'crichd.tv' in link:
         c='zenataStoGoPuknalaGavolot'
         ccommand=''
         swfUrl=base64.b64decode('aHR0cDovL3d3dy5wM2cudHYvcmVzb3VyY2VzL3NjcmlwdHMvZXBsYXllci5zd2Y=')
@@ -2062,10 +2166,10 @@ try:
 
 	elif mode==26 :
 		print "Play url is "+url
-		AddPopeLive(url)
+		AddCricHD(url)
 	elif mode==27 :
 		print "Play url is "+url
-		PlayPopeLive(url)                
+		PlayCricHD(url)                
 	elif mode==31 :
 		print "Play url is "+url
 		AddFlashtv(url)                
