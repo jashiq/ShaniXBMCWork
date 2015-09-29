@@ -936,6 +936,7 @@ def AddSmartCric(url):
 
 def PlayWatchCric(url):
     progress = xbmcgui.DialogProgress()
+    
     progress.create('Progress', 'Fetching Streaming Info')
     progress.update( 10, "", "Finding links..", "" )
     pat_ifram='<iframe.*?src=(.*?).?"?>'    
@@ -959,7 +960,7 @@ def PlayWatchCric(url):
     print 'match_url',match_url,link
         
 
-    ccommand='%s;TRUE;TRUE;'
+    ccommand="";#'%s;TRUE;TRUE;'
     swfUrl=base64.b64decode('aHR0cDovL3d3dy5taXBzcGxheWVyLmNvbS9jb250ZW50L3NjcmlwdHMvZnBsYXllci5zd2Y=')
     sitename='www.mipsplayer.com'
     pat_e=' e=\'(.*?)\';'
@@ -973,10 +974,12 @@ def PlayWatchCric(url):
         pat_e=' g=\'(.*?)\';'
         app='stream'
         pat_js='channel=\'(.*?)\''
+        ccommand=""#dont need to send
 
     elif 'www.mipsplayer.com' in link:
-        c='gaolVanusPobeleVoKosata'
-        ccommand='%s;TRUE;TRUE;'
+        c='ignore'#gaolVanusPobeleVoKosata
+        ccommand='%s;FALSE;FALSE;' #stop sending and waiting
+        
         swfUrl=base64.b64decode('aHR0cDovL3d3dy5taXBzcGxheWVyLmNvbS9jb250ZW50L3NjcmlwdHMvZnBsYXllci5zd2Y=')
         sitename='www.mipsplayer.com'
         pat_e=' e=\'(.*?)\';'
@@ -1010,13 +1013,22 @@ def PlayWatchCric(url):
     progress.update( 40, "", "Building request links..", "" )
         
     match_urljs =re.findall(pat_js,link)[0]
-    width='480'
-    height='380'
+    try:
+        width='620'
+        height='430'
 
-    print link
+        patt="width=([0-9]*).*?height=([0-9]*)"
+        matc =re.findall(patt,link)
+        print 'matc',matc
+        width, height=matc[0]
+    except: pass
+
+    print 'width,height',width,height
+    #print link
     match_e =re.findall(pat_e,link)[0]
     
     match_urljs=('http://%s/embedplayer/'%sitename)+match_urljs+'/'+match_e+'/'+width+'/'+height
+    
     
     req = urllib2.Request(match_urljs)
     req.add_header('User-Agent', 'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
@@ -1047,7 +1059,8 @@ def PlayWatchCric(url):
 
     if not ccommand=="":
         ccommand="ccommand="+(ccommand%c)
-    url='rtmp://%s/%s playpath=%s?id=%s pageUrl=%s swfUrl=%s Conn=S:OK %s timeout=20'%(ip,app,sid,matchid,match_urljs,swfUrl,ccommand)
+    print 'ccommand',ccommand
+    url='rtmp://%s/%s playpath=%s?id=%s pageUrl=%s swfUrl=%s Conn=S:OK %s flashVer=WIN\2019,0,0,185 timeout=20'%(ip,app,sid,matchid,match_urljs,swfUrl,ccommand)
     print url
     playlist = xbmc.PlayList(1)
     playlist.clear()

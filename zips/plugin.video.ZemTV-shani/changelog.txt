@@ -1,3 +1,6 @@
+[B]Version 3.7.4[/B]
+watchric fixed
+
 [B]Version 3.7.3[/B]
 fixed smart tv
 
