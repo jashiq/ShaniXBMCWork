@@ -753,10 +753,11 @@ def replaceGLArabVariables(link, d,gcid, title):
                 mainpage=getUrl('http://www.glarab.com/',cookieJar)
                 evalidation=re.compile(' id="__EVENTVALIDATION" value="(.*?)"').findall(mainpage)[0]
                 vstate=re.compile('id="__VIEWSTATE" value="(.*?)"').findall(mainpage)[0]  
-
-                post={'pageHeader$ScriptManager1':'pageHeader$UpdatePanel1|pageHeader$buttonLogin','__EVENTTARGET':'','__EVENTARGUMENT':'','__VIEWSTATE':vstate,'__EVENTVALIDATION':evalidation,'pageHeader$txtUsername':GLArabUserName,'pageHeader$txtPassword':GLArabUserPwd,'pageHeader$buttonLogin':' '}
+                VIEWSTATEGENERATOR  = re.compile('id="__VIEWSTATEGENERATOR" value="(.*?)"').findall(mainpage)[0]  
+                post={'pageHeader$ScriptManager1':'pageHeader$UpdatePanel1|pageHeader$buttonLogin','__EVENTTARGET':'','__EVENTARGUMENT':'','__VIEWSTATE':vstate,'__EVENTVALIDATION':evalidation,'pageHeader$txtUsername':GLArabUserName,'pageHeader$txtPassword':GLArabUserPwd,'pageHeader$buttonLogin':' ','__VIEWSTATEGENERATOR':VIEWSTATEGENERATOR}
                 post = urllib.urlencode(post)
                 getUrl('http://www.glarab.com/homepage.aspx',cookieJar,post)
+                getUrl('http://www.glarab.com/js/glapi.ashx',cookieJar,post)
             else:
                 getUrl('http://www.glarab.com/',cookieJar)
         except:
