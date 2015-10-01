@@ -947,8 +947,8 @@ def replaceYOVariables(liveLink,pDialog,title):
     try:
         cfile = communityStreamPath+'/yoLoginCookie.lwp'
         cj=getCookieJar(cfile)
-        if not liveLink.endswith('.php'):
-            return liveLink
+#        if not liveLink.endswith('.php'):
+#            return liveLink
         sUser=selfAddon.getSetting( "YOUSER" )
         sPwd=selfAddon.getSetting( "YOPWD" )
 
@@ -959,7 +959,9 @@ def replaceYOVariables(liveLink,pDialog,title):
                 htmlD=getUrl('http://yooanime.com/index.php', cookieJar=cj,post=post,timeout=20)
     except: pass
     page_data=getUrl(liveLink, cookieJar=cj,timeout=20)
-    code_pat='\[\{file:.?"(.*?)"'        
+
+
+    code_pat='file:.?"(.*?)"'        
     reg_code=re.compile(code_pat).findall(page_data)
     if len(reg_code)==0:
         code_pat='file: window.atob\(\'(.*?)\''        
