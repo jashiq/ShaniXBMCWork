@@ -120,7 +120,7 @@ def AddSeries(Fromurl):
 #	match =re.findall('<img src="(.*?)" alt=".*".+<\/a>\n*.+<div class="post-title"><a href="(.*?)".*<b>(.*)<\/b>', link, re.UNICODE)
 
 
-	pattern = re.compile('<a (title=".*?"\s)*href="(?P<url>[^"]*)"\s*[^>]*><img (class="[^"]*")*(\salt="(?P<alt>[^"]*)"|\ssrc="(?P<imgsrc>[^"]*)")+')
+	pattern = re.compile('<a (title=".*?"\s)*href="(?P<url>[^"]*)"\s*[^>]*><img (class="[^"]*")*.*?(\salt="(?P<alt>[^"]*)"|\ssrc="(?P<imgsrc>[^"]*)")+')
 
 	for cname in pattern.finditer(link):
 		item_name = name_from_re = cname.group('alt')
@@ -137,14 +137,17 @@ def AddSeries(Fromurl):
 		item_name = item_name.replace('Watch ', '').replace('watch ', '').title()
 
 		#print item_name, cname[groupUrl], cname[groupImage]
-
-		addDir(item_name, cname.group('url'), 3, cname.group('imgsrc')) #name, url, mode, icon
+		if not '/category/' in  cname.group('url'):
+			addDir(item_name, cname.group('url'), 4, cname.group('imgsrc')) #name, url, mode, icon
+		else:
+			addDir(item_name, cname.group('url'), 3, cname.group('imgsrc')) #name, url, mode, icon        
 
 #	<a href="http://www.zemtv.com/page/2/">&gt;</a></li>
-	match =re.findall("<div class='pagination'>.*<a href='([^']*)'>&rsaquo;</a>", link, re.IGNORECASE|re.DOTALL)
 
+	match =re.findall('"nextLink":"(http.*?)"', link)
+	print link,'match',match
 	if len(match)==1:
-		addDir('Next Page' ,match[0] ,2, '')
+		addDir('Next Page' ,match[0].replace('\\/','/') ,2, '')
 
 def TopRatedDramas(Fromurl):
 
@@ -195,7 +198,7 @@ def AddEnteries(Fromurl):
 #	match =re.findall('<img src="(.*?)" alt=".*".+<\/a>\n*.+<div class="post-title"><a href="(.*?)".*<b>(.*)<\/b>', link, re.UNICODE)
 #	print Fromurl
 #	match =re.findall('<div class="videopart">\s*<div class="paneleft">\s*<a class="pthumb" href="(.*?)" title="(.*?)".*?img.*?src="(.*?)" class="attachment-index-post-thumbnail wp-post-image"', link, re.M|re.DOTALL)
-	match =re.findall('<div class="video_thumnail_hover" href="#">\s*<a class="pthumb" href="(.*?)" title="(.*?)" ><img alt="" src=".*?hover_bg.png"><\/a>\s*<\/div>\s*<a class="pthumb"\s+href=".*?" title=".*?" ><span><\/span>\s*<img width="\d+" height="\d+" src="(.*?)" class="attachment-index-post-thumbnail wp-post-image".*?\/><\/a>', link, re.M|re.DOTALL)
+	match =re.findall('<article class="clearfix".*?<a href="(.*?)".*?title="(.*?)".*?<img.*?src="(.*?)"', link)
 #	print Fromurl
 
 	#print match
@@ -203,11 +206,10 @@ def AddEnteries(Fromurl):
 	for cname in match:
 		addDir(cname[1] ,cname[0] ,4,cname[2],isItFolder=False)
 		
-	match =re.findall("<div class='pagination'>.*<a href='([^']*)'>&rsaquo;</a>", link, re.IGNORECASE|re.DOTALL)
-	#print 'match', match
-
+	match =re.findall('"nextLink":"(http.*?)"', link)
 	if len(match)==1:
-		addDir('Next Page' ,match[0] ,3, '')
+		addDir('Next Page' ,match[0].replace('\\/','/') ,3, '')
+	#print 'match', match
 
 def AddChannels(liveURL):
 

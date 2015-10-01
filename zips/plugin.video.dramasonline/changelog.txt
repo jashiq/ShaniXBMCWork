@@ -1,3 +1,6 @@
+[B]Version 2.4.8[/B]
+- site updated, so regex updated
+
 [B]Version 2.4.7[/B]
 - some code improvement and fix . thanks to  Kashiif@github
 
