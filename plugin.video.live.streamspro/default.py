@@ -89,48 +89,52 @@ def makeRequest(url, headers=None):
                 xbmc.executebuiltin("XBMC.Notification(LiveStreamsPro,We failed to reach a server. - "+str(e.reason)+",10000,"+icon+")")
 
 def getSources():
-        if os.path.exists(favorites) == True:
-            addDir('Favorites','url',4,os.path.join(home, 'resources', 'favorite.png'),FANART,'','','','')
-        if addon.getSetting("browse_xml_database") == "true":
-            addDir('XML Database','http://xbmcplus.xb.funpic.de/www-data/filesystem/',15,icon,FANART,'','','','')
-        if addon.getSetting("browse_community") == "true":
-            addDir('Community Files','community_files',16,icon,FANART,'','','','')
-        if addon.getSetting("searchotherplugins") == "true":
-            addDir('Search Other Plugins','Search Plugins',25,icon,FANART,'','','','')
-        if os.path.exists(source_file)==True:
-            sources = json.loads(open(source_file,"r").read())
-            #print 'sources',sources
-            if len(sources) > 1:
-                for i in sources:
-                    ## for pre 1.0.8 sources
-                    if isinstance(i, list):
-                        addDir(i[0].encode('utf-8'),i[1].encode('utf-8'),1,icon,FANART,'','','','','source')
-                    else:
-                        thumb = icon
-                        fanart = FANART
-                        desc = ''
-                        date = ''
-                        credits = ''
-                        genre = ''
-                        if i.has_key('thumbnail'):
-                            thumb = i['thumbnail']
-                        if i.has_key('fanart'):
-                            fanart = i['fanart']
-                        if i.has_key('description'):
-                            desc = i['description']
-                        if i.has_key('date'):
-                            date = i['date']
-                        if i.has_key('genre'):
-                            genre = i['genre']
-                        if i.has_key('credits'):
-                            credits = i['credits']
-                        addDir(i['title'].encode('utf-8'),i['url'].encode('utf-8'),1,thumb,fanart,desc,genre,date,credits,'source')
-            else:
-                if len(sources) == 1:
-                    if isinstance(sources[0], list):
-                        getData(sources[0][1].encode('utf-8'),FANART)
-                    else:
-                        getData(sources[0]['url'], sources[0]['fanart'])
+        try:
+            if os.path.exists(favorites) == True:
+                addDir('Favorites','url',4,os.path.join(home, 'resources', 'favorite.png'),FANART,'','','','')
+            if addon.getSetting("browse_xml_database") == "true":
+                addDir('XML Database','http://xbmcplus.xb.funpic.de/www-data/filesystem/',15,icon,FANART,'','','','')
+            if addon.getSetting("browse_community") == "true":
+                addDir('Community Files','community_files',16,icon,FANART,'','','','')
+            if addon.getSetting("searchotherplugins") == "true":
+                addDir('Search Other Plugins','Search Plugins',25,icon,FANART,'','','','')
+            if os.path.exists(source_file)==True:
+                sources = json.loads(open(source_file,"r").read())
+                #print 'sources',sources
+                if len(sources) > 1:
+                    for i in sources:
+                        try:
+                            ## for pre 1.0.8 sources
+                            if isinstance(i, list):
+                                addDir(i[0].encode('utf-8'),i[1].encode('utf-8'),1,icon,FANART,'','','','','source')
+                            else:
+                                thumb = icon
+                                fanart = FANART
+                                desc = ''
+                                date = ''
+                                credits = ''
+                                genre = ''
+                                if i.has_key('thumbnail'):
+                                    thumb = i['thumbnail']
+                                if i.has_key('fanart'):
+                                    fanart = i['fanart']
+                                if i.has_key('description'):
+                                    desc = i['description']
+                                if i.has_key('date'):
+                                    date = i['date']
+                                if i.has_key('genre'):
+                                    genre = i['genre']
+                                if i.has_key('credits'):
+                                    credits = i['credits']
+                                addDir(i['title'].encode('utf-8'),i['url'].encode('utf-8'),1,thumb,fanart,desc,genre,date,credits,'source')
+                        except: traceback.print_exc()
+                else:
+                    if len(sources) == 1:
+                        if isinstance(sources[0], list):
+                            getData(sources[0][1].encode('utf-8'),FANART)
+                        else:
+                            getData(sources[0]['url'], sources[0]['fanart'])
+        except: traceback.print_exc()
 
 def addSource(url=None):
         if url is None:
@@ -767,7 +771,11 @@ def parse_regex(reg_item):
                             regexs[i('name')[0].string]['includeheaders'] = i('includeheaders')[0].string
                         except:
                             addon_log("Regex: -- No includeheaders --")
-
+                        try:
+                            regexs[i('name')[0].string]['proxy'] = i('proxy')[0].string
+                        except:
+                            addon_log("Regex: -- No proxy --")
+                            
                         try:
                             regexs[i('name')[0].string]['x-req'] = i('x-req')[0].string
                         except:
@@ -923,8 +931,38 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                         header_in_page=None
                         if len(page_split)>1:
                             header_in_page=page_split[1]
+
+#                            if 
+#                            proxy = urllib2.ProxyHandler({ ('https' ? proxytouse[:5]=="https":"http") : proxytouse})
+#                            opener = urllib2.build_opener(proxy)
+#                            urllib2.install_opener(opener)
+
+                            
+                        
+#                        import urllib2
+#                        print 'urllib2.getproxies',urllib2.getproxies()
+                        current_proxies=urllib2.ProxyHandler(urllib2.getproxies())
+        
+        
+                        
                         req = urllib2.Request(pageUrl)
+                        if 'proxy' in m:
+                            proxytouse= m['proxy']
+                            print 'proxytouse',proxytouse
+#                            urllib2.getproxies= lambda: {}
+                            if pageUrl[:5]=="https":
+                                proxy = urllib2.ProxyHandler({ 'https' : proxytouse})
+                                #req.set_proxy(proxytouse, 'https')
+                            else:
+                                proxy = urllib2.ProxyHandler({ 'http'  : proxytouse})
+                                #req.set_proxy(proxytouse, 'http')
+                            opener = urllib2.build_opener(proxy)
+                            urllib2.install_opener(opener)
+                            
+                        
                         req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:14.0) Gecko/20100101 Firefox/14.0.1')
+                        proxytouse=None
+
                         if 'refer' in m:
                             req.add_header('Referer', m['refer'])
                         if 'accept' in m:
@@ -959,6 +997,8 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                             cookie_handler = urllib2.HTTPCookieProcessor(cookieJar)
                             opener = urllib2.build_opener(cookie_handler, urllib2.HTTPBasicAuthHandler(), urllib2.HTTPHandler())
                             opener = urllib2.install_opener(opener)
+                            print 'noredirect','noredirect' in m
+                            
                             if 'noredirect' in m:
                                 opener2 = urllib2.build_opener(NoRedirection)
                                 opener = urllib2.install_opener(opener2)
@@ -969,6 +1009,7 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                             keepalive_handler = HTTPHandler()
                             opener = urllib2.build_opener(keepalive_handler)
                             urllib2.install_opener(opener)
+
 
                         #print 'after cookie jar'
                         post=None
@@ -999,6 +1040,10 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                             response = urllib2.urlopen(req)
 
                         link = response.read()
+                        
+                        if 'proxy' in m and not current_proxies is None:
+                            urllib2.install_opener(urllib2.build_opener(current_proxies))
+                        
                         link=javascriptUnEscape(link)
                         #print link This just print whole webpage in LOG
                         if 'includeheaders' in m:
@@ -1007,6 +1052,7 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                             for b in response.headers:
                                 link+= b+':'+response.headers.get(b)+'\n'
                             link+='$$HEADERS_END$$:'
+#                        print link
                         addon_log(link)
                         addon_log(cookieJar )
 
@@ -1025,7 +1071,7 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                             link=val
                         else:
                             link=m['page']
-                if '$pyFunction:playmedia(' in m['expre'] or 'ActivateWindow'  in m['expre']   or  any(x in url for x in g_ignoreSetResolved):
+                if '$pyFunction:playmedia(' in m['expre'] or 'ActivateWindow'  in m['expre']  or '$PLAYERPROXY$=' in url  or  any(x in url for x in g_ignoreSetResolved):
                     setresolved=False
                 if  '$doregex' in m['expre']:
                     m['expre']=getRegexParsed(regexs, m['expre'],cookieJar,recursiveCall=True,cachedPages=cachedPages)
@@ -1107,6 +1153,108 @@ def playmedia(media_url):
             xbmc.sleep(200)
     except:
         traceback.print_exc()
+    return ''
+
+def kodiJsonRequest(params):
+    data = json.dumps(params)
+    request = xbmc.executeJSONRPC(data)
+
+    try:
+        response = json.loads(request)
+    except UnicodeDecodeError:
+        response = json.loads(request.decode('utf-8', 'ignore'))
+
+    try:
+        if 'result' in response:
+            return response['result']
+        return None
+    except KeyError:
+        logger.warn("[%s] %s" % (params['method'], response['error']['message']))
+        return None
+
+
+def setKodiProxy(proxysettings=None):
+
+    if proxysettings==None:
+        print 'proxy set to nothing'
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.usehttpproxy", "value":false}, "id":1}')
+    else:
+        
+        ps=proxysettings.split(':')
+        proxyURL=ps[0]
+        proxyPort=ps[1]
+        proxyType=ps[2]
+        proxyUsername=None
+        proxyPassword=None
+         
+        if len(ps)>3 and '@' in proxysettings:
+            proxyUsername=ps[3]
+            proxyPassword=proxysettings.split('@')[-1]
+
+        print 'proxy set to', proxyType, proxyURL,proxyPort
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.usehttpproxy", "value":true}, "id":1}')
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxytype", "value":' + str(proxyType) +'}, "id":1}')
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxyserver", "value":"' + str(proxyURL) +'"}, "id":1}')
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxyport", "value":' + str(proxyPort) +'}, "id":1}')
+        
+        
+        if not proxyUsername==None:
+            xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxyusername", "value":"' + str(proxyUsername) +'"}, "id":1}')
+            xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxypassword", "value":"' + str(proxyPassword) +'"}, "id":1}')
+
+        
+def getConfiguredProxy():
+    proxyActive = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.usehttpproxy"}, 'id': 1})['value']
+    print 'proxyActive',proxyActive
+    proxyType = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxytype"}, 'id': 1})['value']
+
+    if proxyActive: # PROXY_HTTP
+        proxyURL = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxyserver"}, 'id': 1})['value']
+        proxyPort = unicode(kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxyport"}, 'id': 1})['value'])
+        proxyUsername = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxyusername"}, 'id': 1})['value']
+        proxyPassword = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxypassword"}, 'id': 1})['value']
+
+        if proxyUsername and proxyPassword and proxyURL and proxyPort:
+            return proxyURL + ':' + str(proxyPort)+':'+str(proxyType) + ':' + proxyUsername + '@' + proxyPassword
+        elif proxyURL and proxyPort:
+            return proxyURL + ':' + str(proxyPort)+':'+str(proxyType)
+    else:
+        return None
+        
+def playmediawithproxy(media_url, name, iconImage,proxyip,port):
+
+    progress = xbmcgui.DialogProgress()
+    progress.create('Progress', 'Playing with custom proxy')
+    progress.update( 10, "", "setting proxy..", "" )
+    proxyset=False
+    existing_proxy=''
+    try:
+        
+        existing_proxy=getConfiguredProxy()
+        print 'existing_proxy',existing_proxy
+        #read and set here
+        setKodiProxy( proxyip + ':' + port+':0')
+
+        print 'proxy setting complete', getConfiguredProxy()
+        proxyset=True
+        progress.update( 80, "", "setting proxy complete, now playing", "" )
+        progress.close()
+        progress=None
+        import  CustomPlayer
+        player = CustomPlayer.MyXBMCPlayer()
+        listitem = xbmcgui.ListItem( label = str(name), iconImage = iconImage, thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ), path=media_url )
+        player.play( media_url,listitem)
+        xbmc.sleep(1000)
+        while player.is_active:
+            xbmc.sleep(200)
+    except:
+        traceback.print_exc()
+    if progress:
+        progress.close()
+    if proxyset:
+        print 'now resetting the proxy back'
+        setKodiProxy(existing_proxy)
+        print 'reset here'
     return ''
 
 
@@ -2102,7 +2250,7 @@ def addLink(url,name,iconimage,fanart,description,genre,date,showcontext,playlis
         else:
             liz.setInfo(type="Video", infoLabels=allinfo)
         liz.setProperty("Fanart_Image", fanart)
-        if (not play_list) and not any(x in url for x in g_ignoreSetResolved):#  (not url.startswith('plugin://plugin.video.f4mTester')):
+        if (not play_list) and not any(x in url for x in g_ignoreSetResolved) and not '$PLAYERPROXY$=' in url:#  (not url.startswith('plugin://plugin.video.f4mTester')):
             if regexs:
                 if '$pyFunction:playmedia(' not in urllib.unquote_plus(regexs) and 'notplayable' not in urllib.unquote_plus(regexs)  :
                     #print 'setting isplayable',url, urllib.unquote_plus(regexs),url
@@ -2141,6 +2289,8 @@ def addLink(url,name,iconimage,fanart,description,genre,date,showcontext,playlis
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,totalItems=total)
         #print 'added',name
         return ok
+
+        
 def playsetresolved(url,name,iconimage,setresolved=True):
     if setresolved:
         liz = xbmcgui.ListItem(name, iconImage=iconimage)
@@ -2350,7 +2500,13 @@ elif mode==17:
     addon_log("getRegexParsed")
     url,setresolved = getRegexParsed(regexs, url)
     if url:
-        playsetresolved(url,name,iconimage,setresolved)
+        if '$PLAYERPROXY$=' in url:
+            url,proxy=url.split('$PLAYERPROXY$=')
+            print 'proxy',proxy
+            proxyip,port=proxy.split(':')
+            playmediawithproxy(url,name,iconimage,proxyip,port )
+        else:
+            playsetresolved(url,name,iconimage,setresolved)
     else:
         xbmc.executebuiltin("XBMC.Notification(LiveStreamsPro,Failed to extract regex. - "+"this"+",4000,"+icon+")")
 elif mode==18:
