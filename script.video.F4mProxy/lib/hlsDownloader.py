@@ -18,6 +18,7 @@ import urlparse, urllib2, subprocess, os,traceback,cookielib,re,Queue,threading
 import xml.etree.ElementTree as etree
 import base64
 from struct import unpack, pack
+import struct
 import sys
 import io
 import os
