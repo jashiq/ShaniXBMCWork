@@ -343,11 +343,16 @@ def AddSports(url):
         match.append((base64.b64decode('U2t5IFNwb3J0IDQ=')+' [Not working]','manual',base64.b64decode('aHR0cDovL2pweG1sLmphZG9vdHYuY29tL3Z1eG1sLnBocC9qYWRvb3htbC9wbGF5LzMxNQ=='),''))
         match.append((base64.b64decode('U2t5IFNwb3J0IDU=')+' [Not working]','manual',base64.b64decode('aHR0cDovL215amFkb290di5qYWRvb3R2LmNvbS9qbWFya3MvYm94L3BsYXlWaWRlby5waHA/cGxheVVybD1ydG1wOi8vcXVpbnplbGl2ZWZzLmZwbGl2ZS5uZXQvcXVpbnplbGl2ZS1saXZlL3NreXNwb3J0czUuc3RyZWFtP3NlY3VyaXR5dHlwZT0y'),''))
 
-    if 1==2:    
-        match.append((base64.b64decode('U2t5IFNwb3J0IDE=')+' alt HD','gen',base64.b64decode('cnRtcDovLzE2Ny4xMTQuMTE3LjIwOC9saXZlL3NreTF2'),''))
-        match.append((base64.b64decode('U2t5IFNwb3J0IDI=')+' alt HD','gen',base64.b64decode('cnRtcDovLzE2Ny4xMTQuMTE3LjIwOC9saXZlL3NreTJ2'),''))
-        match.append((base64.b64decode('U2t5IFNwb3J0IDM=')+' alt HD','gen',base64.b64decode('cnRtcDovLzE2Ny4xMTQuMTE3LjIwOC9saXZlL3NreTN2'),''))
-        match.append((base64.b64decode('U2t5IFNwb3J0IDQ=')+' alt HD','gen',base64.b64decode('cnRtcDovLzE2Ny4xMTQuMTE3LjIwOC9saXZlL3NreTR2'),''))
+    if 1==1:    
+        match.append((base64.b64decode('U2t5IFNwb3J0IDE=')+' alt HD','gen',base64.b64decode('aHR0cDovL2Nkcy5hM2c2dDhtOS5od2Nkbi5uZXQvY2FsaXZlb3JpZ2luL3NreXNwb3J0czEuc3RyZWFtL3BsYXlsaXN0Lm0zdTg='),''))
+        match.append((base64.b64decode('U2t5IFNwb3J0IDI=')+' alt HD','gen',base64.b64decode('aHR0cDovL2Nkcy5hM2c2dDhtOS5od2Nkbi5uZXQvY2FsaXZlb3JpZ2luL3NreXNwb3J0czIuc3RyZWFtL3BsYXlsaXN0Lm0zdTg='),''))
+        match.append((base64.b64decode('U2t5IFNwb3J0IDM=')+' alt HD','gen',base64.b64decode('aHR0cDovL2Nkcy5hM2c2dDhtOS5od2Nkbi5uZXQvY2FsaXZlb3JpZ2luL3NreXNwb3J0czMuc3RyZWFtL3BsYXlsaXN0Lm0zdTg='),''))
+        match.append((base64.b64decode('U2t5IFNwb3J0IDQ=')+' alt HD','gen',base64.b64decode('aHR0cDovL2Nkcy5hM2c2dDhtOS5od2Nkbi5uZXQvY2FsaXZlb3JpZ2luL3NreXNwb3J0czQuc3RyZWFtL3BsYXlsaXN0Lm0zdTg='),''))
+        match.append((base64.b64decode('U2t5IFNwb3J0IDU=')+' alt HD','gen',base64.b64decode('aHR0cDovL2Nkcy5hM2c2dDhtOS5od2Nkbi5uZXQvY2FsaXZlb3JpZ2luL3NreXNwb3J0czUuc3RyZWFtL3BsYXlsaXN0Lm0zdTg='),''))
+        match.append((base64.b64decode('R2VvIFN1cGVy')+' alt HD','gen',base64.b64decode('aHR0cDovL2Nkcy5pOHc3cjVqMi5od2Nkbi5uZXQvamRvcmlnaW4vamRHZW9zdXBlcjQ3Ni5zdHJlYW0vcGxheWxpc3QubTN1OA=='),''))
+
+        
+
         
     if 1==2:
         match.append((base64.b64decode('U2t5IFNwb3J0IDU=')+' alt HD','gen',base64.b64decode('cnRtcDovLzE2Ny4xMTQuMTE3LjIwOC9saXZlL3NreTV2'),''))
@@ -413,8 +418,17 @@ def PlayCricHD(url):
     
     pat='fid="(.*?)".*width=([0-9]*).*?height=([0-9]*)'
     fid,wid,ht=re.findall(pat,videoPage)[0]
+
+    req = urllib2.Request('http://www.yocast.tv/embed.js')
+    req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
+    response = urllib2.urlopen(req)
+    jspage =  response.read()
+    response.close()
+    pat='(http.*?)\?'
+    jsfinal=re.findall(pat,jspage)[0]
     
-    newurl2="http://www.yocast.tv/embedcr.php?live=%s&vw=%s&vh=%s"%(fid,wid,ht)
+    
+    newurl2="%s?live=%s&vw=%s&vh=%s"%(jsfinal,fid,wid,ht)
     
     req = urllib2.Request(newurl2)
     req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
@@ -701,7 +715,7 @@ def performWillowLogin():
 
 
         if 'Login/Register' in mainpage:
-            url='https://www.willow.tv/EventMgmt/UserMgmt/Login.asp'
+            url=base64.b64decode('aHR0cHM6Ly93d3cud2lsbG93LnR2L0V2ZW50TWdtdC9Vc2VyTWdtdC9Mb2dpbi5hc3A=')
             post = {'Email':willow_username,'Password':willow_pwd,'LoginFormSubmit':'true'}
             post = urllib.urlencode(post)
             mainpage = getUrl(url,cookieJar=cookieJar,post=post)
@@ -712,6 +726,141 @@ def performWillowLogin():
     except: 
             traceback.print_exc(file=sys.stdout)
     return False,None
+
+def kodiJsonRequest(params):
+    data = json.dumps(params)
+    request = xbmc.executeJSONRPC(data)
+
+    try:
+        response = json.loads(request)
+    except UnicodeDecodeError:
+        response = json.loads(request.decode('utf-8', 'ignore'))
+
+    try:
+        if 'result' in response:
+            return response['result']
+        return None
+    except KeyError:
+        logger.warn("[%s] %s" % (params['method'], response['error']['message']))
+        return None
+
+
+def setKodiProxy(proxysettings=None):
+
+    if proxysettings==None:
+        print 'proxy set to nothing'
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.usehttpproxy", "value":false}, "id":1}')
+    else:
+        
+        ps=proxysettings.split(':')
+        proxyURL=ps[0]
+        proxyPort=ps[1]
+        proxyType=ps[2]
+        proxyUsername=None
+        proxyPassword=None
+         
+        if len(ps)>3 and '@' in proxysettings:
+            proxyUsername=ps[3]
+            proxyPassword=proxysettings.split('@')[-1]
+
+        print 'proxy set to', proxyType, proxyURL,proxyPort
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.usehttpproxy", "value":true}, "id":1}')
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxytype", "value":' + str(proxyType) +'}, "id":1}')
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxyserver", "value":"' + str(proxyURL) +'"}, "id":1}')
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxyport", "value":' + str(proxyPort) +'}, "id":1}')
+        
+        
+        if not proxyUsername==None:
+            xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxyusername", "value":"' + str(proxyUsername) +'"}, "id":1}')
+            xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxypassword", "value":"' + str(proxyPassword) +'"}, "id":1}')
+
+        
+def getConfiguredProxy():
+    proxyActive = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.usehttpproxy"}, 'id': 1})['value']
+    print 'proxyActive',proxyActive
+    proxyType = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxytype"}, 'id': 1})['value']
+
+    if proxyActive: # PROXY_HTTP
+        proxyURL = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxyserver"}, 'id': 1})['value']
+        proxyPort = unicode(kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxyport"}, 'id': 1})['value'])
+        proxyUsername = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxyusername"}, 'id': 1})['value']
+        proxyPassword = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxypassword"}, 'id': 1})['value']
+
+        if proxyUsername and proxyPassword and proxyURL and proxyPort:
+            return proxyURL + ':' + str(proxyPort)+':'+str(proxyType) + ':' + proxyUsername + '@' + proxyPassword
+        elif proxyURL and proxyPort:
+            return proxyURL + ':' + str(proxyPort)+':'+str(proxyType)
+    else:
+        return None
+        
+def playmediawithproxy(media_url, name, iconImage,proxyip,port,progress):
+
+    progress.create('Progress', 'Playing with custom proxy')
+    progress.update( 50, "", "setting proxy..", "" )
+    proxyset=False
+    existing_proxy=''
+    try:
+        
+        existing_proxy=getConfiguredProxy()
+        print 'existing_proxy',existing_proxy
+        #read and set here
+        setKodiProxy( proxyip + ':' + port+':0')
+
+        print 'proxy setting complete', getConfiguredProxy()
+        proxyset=True
+        progress.update( 80, "", "setting proxy complete, now playing", "" )
+        progress.close()
+        progress=None
+        import  CustomPlayer
+        player = CustomPlayer.MyXBMCPlayer()
+        listitem = xbmcgui.ListItem( label = str(name), iconImage = iconImage, thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ), path=media_url )
+        player.play( media_url,listitem)
+        xbmc.sleep(1000)
+        while player.is_active:
+            xbmc.sleep(200)
+    except:
+        traceback.print_exc()
+    if progress:
+        progress.close()
+    if proxyset:
+        print 'now resetting the proxy back'
+        setKodiProxy(existing_proxy)
+        print 'reset here'
+    return ''
+    
+def getwillow247(matchid,CJ):
+
+    progress = xbmcgui.DialogProgress()
+    progress.create('Progress', 'Willow 24x7')
+    progress.update( 10, "", "Getting Urls..")
+    
+    liveUrl=base64.b64decode('aHR0cDovL20ud2lsbG93LnR2L2dldFN0cmVhbWluZ1VSTFMuYXNwP21pZD05OTk5OTk=')
+    pat='"URL":"(.*?)"'
+    headers=[('Referer',base64.b64decode('aHR0cDovL20ud2lsbG93LnR2L2lPU0hvbWUuYXNw')),('User-Agent','Mozilla/5.0 (iPad; CPU OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11B554a')]
+    htm=getUrl(liveUrl,cookieJar=CJ,headers=headers) 
+    if 'Failure-Region' in htm:
+        progress.update( 30, "", "Not in US? Using proxy" )
+
+        proxyserver=selfAddon.getSetting('WillowProxy')
+        proxyport=selfAddon.getSetting('WillowPort')
+        ##use US proxy and play with it
+        cookie_handler = urllib2.HTTPCookieProcessor(CJ)
+        opener = urllib2.build_opener(cookie_handler, urllib2.HTTPBasicAuthHandler(), urllib2.HTTPHandler(),urllib2.ProxyHandler({ 'http'  : '%s:%s'%(proxyserver,proxyport)}))
+        req = urllib2.Request(liveUrl)
+        req.add_header('User-Agent','Mozilla/5.0 (iPad; CPU OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11B554a')
+        req.add_header('Referer',base64.b64decode('aHR0cDovL20ud2lsbG93LnR2L2lPU0hvbWUuYXNw'))
+        response = opener.open(req,timeout=20)
+        link=response.read()
+        response.close()
+        print link
+        progress.update( 30, "", "Got the Link, Now playing with Using proxy" )
+        final_url=re.findall(pat,link)[0]
+        playmediawithproxy(final_url,'24x7 willow','',proxyserver,proxyport,progress)
+        return ''
+    else:
+        progress.close()
+        final_url=re.findall(pat,htm)[0]
+        return final_url
     
 def getMatchUrl(matchid):
     if not useMyOwnUserNamePwd():
@@ -751,6 +900,8 @@ def getMatchUrl(matchid):
             source_sectionid=''
             returnParts=False
             userid=''
+            if matchid == '999999':
+                return getwillow247(matchid,cookieJar)
             for i in cookieJar:
 
                 s=repr(i)
@@ -771,13 +922,13 @@ def getMatchUrl(matchid):
                 if ':' in matchid:
                     matchid,source_sectionid=matchid.split(':')
                     st='Replay'
-                    url='https://www.willow.tv/EventMgmt/ReplayURL.asp?mid=%s&userId=%s'%(matchid,userid)
+                    url=base64.b64decode('aHR0cHM6Ly93d3cud2lsbG93LnR2L0V2ZW50TWdtdC9SZXBsYXlVUkwuYXNwP21pZD0lcyZ1c2VySWQ9JXM=')%(matchid,userid)
                     pat='secureurl":"(.*?)".*?priority":%s,'%source_sectionid    
                     calltype='RecordOne'     
                 else:
                     returnParts=True
                     st='Replay'
-                    url='https://www.willow.tv/EventMgmt/ReplayURL.asp?mid=%s&userId=%s'%(matchid,userid)
+                    url=base64.b64decode('aHR0cHM6Ly93d3cud2lsbG93LnR2L0V2ZW50TWdtdC9SZXBsYXlVUkwuYXNwP21pZD0lcyZ1c2VySWQ9JXM=')%(matchid,userid)
                     pat='"priority":(.+?),"title":"(.*?)",'
                     calltype='RecordAll' 
             
@@ -867,7 +1018,9 @@ def PlayWillowMatch(url):
 #    patt='(.*?)'
 #    print link
 #    match_url =re.findall(patt,link)[0]
+
     match_url=getMatchUrl(url)
+    if match_url=='': return 
     match_url=match_url+'|User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36'
     playlist = xbmc.PlayList(1)
     playlist.clear()
@@ -888,6 +1041,8 @@ def AddWillowReplayParts(url):
 
 def AddWillowCric(url):
     try:
+    
+        addDir(Colored('24x7 channel (US only, others use proxy so SLOW)','blue',True) ,'999999' ,21,'', False, True,isItFolder=False)		#name,url,mode,icon    
         req = urllib2.Request(url)
         req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
         response = urllib2.urlopen(req)
