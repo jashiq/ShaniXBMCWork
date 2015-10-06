@@ -756,8 +756,19 @@ def replaceGLArabVariables(link, d,gcid, title):
                 VIEWSTATEGENERATOR  = re.compile('id="__VIEWSTATEGENERATOR" value="(.*?)"').findall(mainpage)[0]  
                 post={'pageHeader$ScriptManager1':'pageHeader$UpdatePanel1|pageHeader$buttonLogin','__EVENTTARGET':'','__EVENTARGUMENT':'','__VIEWSTATE':vstate,'__EVENTVALIDATION':evalidation,'pageHeader$txtUsername':GLArabUserName,'pageHeader$txtPassword':GLArabUserPwd,'pageHeader$buttonLogin':' ','__VIEWSTATEGENERATOR':VIEWSTATEGENERATOR}
                 post = urllib.urlencode(post)
-                getUrl('http://www.glarab.com/homepage.aspx',cookieJar,post)
-                getUrl('http://www.glarab.com/js/glapi.ashx',cookieJar,post)
+                headers=[('X-MicrosoftAjax','Delta=true')]
+                
+                getUrl('http://www.glarab.com/homepage.aspx',cookieJar,post,headers=headers)
+                dd=getUrl('http://www.glarab.com/js/glapi.ashx',cookieJar)
+                pat='X-hello-data", "(.*?)"'
+                xhello= re.compile(pat).findall(dd)[0] 
+                headers=[('X-hello-data',xhello)]
+                getUrl('http://www.glarab.com/ajax.aspx?session=get&&ref=5715692126',cookieJar,headers=headers)
+                getUrl('http://www.glarab.com/ajax.aspx?session=clear&&ref=5715693078',cookieJar,headers=headers)
+                
+                
+                
+                
             else:
                 getUrl('http://www.glarab.com/',cookieJar)
         except:
