@@ -37,7 +37,7 @@ import binascii
 import zlib
 from hashlib import sha256
 import cookielib
-import array
+import array, random, string
 
 #from Crypto.Cipher import AES
 '''
@@ -446,7 +446,13 @@ def downloadInternal(url,file,maxbitrate=0):
     last_seq = -1
     targetduration = 5
     changed = 0
-    
+    glsession=None
+    if ':7777' in url:
+        try:
+            glsession=re.compile(':7777\/.*?m3u8.*?session=(.*?)&').findall(url)[0]
+        except: 
+            pass
+
     try:
         while 1==1:#thread.isAlive():
             medialist = list(handle_basic_m3u(url))
@@ -466,6 +472,8 @@ def downloadInternal(url,file,maxbitrate=0):
                 seq, enc, duration, targetduration, media_url = media
                 if seq > last_seq:
                     #print 'downloading.............',url
+                    
+                    if glsession: media_url=media_url.replace(glsession,glsession[:-10]+''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)))
                     for chunk in download_chunks(urlparse.urljoin(url, media_url),enc=enc):
                         #print '1. chunk available %d'%len(chunk)
                         if enc: 

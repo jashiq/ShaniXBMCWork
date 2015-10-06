@@ -73,6 +73,20 @@ def PlayStream(sourceEtree, urlSoup, name, url):
                 if gcid and len(gcid)==0: gcid=None
             except: pass
             liveLink=replaceGLArabVariables(liveLink,pDialog,gcid, title)
+            print 'title',title,liveLink
+            if 'proxy' not in title.lower() and 'hd' in title.lower():
+                    print 'inside here'
+                    start = time.time() 
+                    from F4mProxy import f4mProxyHelper
+                    player=f4mProxyHelper()
+                    urlplayed=player.playF4mLink(liveLink, name, streamtype='HLS')
+                    done = time.time()
+                    elapsed = done - start
+                    if urlplayed and elapsed>=3:
+                        return True
+                    else:
+                        return False
+
             if liveLink=="": return False
         if (sc=='kar' or sc=='Local')  and '$KARLOGINCODE$' in liveLink :
             liveLink=replaceKARVariables(liveLink,pDialog,title)
@@ -747,7 +761,10 @@ def replaceGLArabVariables(link, d,gcid, title):
         import cookielib
         cookieJar = cookielib.LWPCookieJar()
         #def getUrl(url, cookieJar=None,post=None, timeout=20, headers=None):
-        
+        import random
+        token=str(int(152 +random.random() * 99999));
+
+        GlUser=token#base64.b64decode('MzM4OA==')        
         try:
             if tryLogin:
                 mainpage=getUrl('http://www.glarab.com/',cookieJar)
@@ -764,7 +781,7 @@ def replaceGLArabVariables(link, d,gcid, title):
                 xhello= re.compile(pat).findall(dd)[0] 
                 headers=[('X-hello-data',xhello)]
                 getUrl('http://www.glarab.com/ajax.aspx?session=get&&ref=5715692126',cookieJar,headers=headers)
-                getUrl('http://www.glarab.com/ajax.aspx?session=clear&&ref=5715693078',cookieJar,headers=headers)
+                #getUrl('http://www.glarab.com/ajax.aspx?session=clear&&ref=5715693078',cookieJar,headers=headers)
                 
                 
                 
@@ -775,7 +792,7 @@ def replaceGLArabVariables(link, d,gcid, title):
             print 'login or accessing the site failed.. continuing'
             traceback.print_exc(file=sys.stdout)
         
-        if gcid or ProxyCall==False:
+        if gcid or ProxyCall==False and 'HD' not in title:
             if gcid:
                 gcUrl='https://apps.glwiz.com:448/uniwebappandroidads/(S(g01ykv45pojkhpzwap1u14dy))/ajax.ashx?channel=tv&chid=%s&'%gcid
                 print gcUrl,'gcUrl'
@@ -813,6 +830,7 @@ def replaceGLArabVariables(link, d,gcid, title):
             print sessionpage
             session=sessionpage.split('|')[1]
             sessionserver=sessionpage.split('|')[2].replace(':2077','')
+            GlUser=sessionpage.split('|')[0]
  
             
         serverPatern=''
@@ -849,10 +867,7 @@ def replaceGLArabVariables(link, d,gcid, title):
             print GLArabServerLR,'GLArabServerLR  '
             type='lr'
         
-        import random
-        token=str(int(152 +random.random() * 99999));
 
-        GlUser=token#base64.b64decode('MzM4OA==')
         link=link.replace('$GL-Qlty$',GLArabQuality)
         link=link.replace('$GL-Sesession$',session)
         link=link.replace('$GL-User$',GlUser)
