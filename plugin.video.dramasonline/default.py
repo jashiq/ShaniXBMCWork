@@ -198,7 +198,7 @@ def AddEnteries(Fromurl):
 #	match =re.findall('<img src="(.*?)" alt=".*".+<\/a>\n*.+<div class="post-title"><a href="(.*?)".*<b>(.*)<\/b>', link, re.UNICODE)
 #	print Fromurl
 #	match =re.findall('<div class="videopart">\s*<div class="paneleft">\s*<a class="pthumb" href="(.*?)" title="(.*?)".*?img.*?src="(.*?)" class="attachment-index-post-thumbnail wp-post-image"', link, re.M|re.DOTALL)
-	match =re.findall('<article class="clearfix".*?<a href="(.*?)".*?title="(.*?)".*?<img.*?src="(.*?)"', link)
+	match =re.findall('<article .*?\s*?<div.*\s*<a href="(.*?)".*?title="(.*?)".*\s.*?<img.*?src="(.*?)"', link)
 #	print Fromurl
 
 	#print match
