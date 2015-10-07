@@ -582,6 +582,10 @@ def AddSeries(Fromurl,pageNumber="",name=""):
 
 def AddEnteries(Fromurl,pageNumber=0):
 #	print Fromurl
+	if '/The-Voice' in Fromurl:
+		Fromurl='/'.join(Fromurl.split('/')[:-1])+'/h.html'
+
+
 	req = urllib2.Request(Fromurl)
 	req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36')
 	response = urllib2.urlopen(req)
@@ -1294,7 +1298,7 @@ def import_module(name, package=None):
         name = _resolve_name(name[level:], package, level)
     __import__(name)
     return sys.modules[name]
-def getUrl(url, cookieJar=None,post=None,referer=None,isJsonPost=False, acceptsession=None):
+def getUrl(url, cookieJar=None,post=None,referer=None,isJsonPost=False, acceptsession=None,timeout=30):
 
 	cookie_handler = urllib2.HTTPCookieProcessor(cookieJar)
 	opener = urllib2.build_opener(cookie_handler, urllib2.HTTPBasicAuthHandler(), urllib2.HTTPHandler())
@@ -1308,7 +1312,7 @@ def getUrl(url, cookieJar=None,post=None,referer=None,isJsonPost=False, acceptse
         
 	if referer:
 		req.add_header('Referer',referer)
-	response = opener.open(req,post,timeout=30)
+	response = opener.open(req,post,timeout=timeout)
 	link=response.read()
 	response.close()
 	return link;
@@ -1456,7 +1460,9 @@ def PlayShowLink ( url ):
 		videoID=url
 	else:
 	#print "PlayLINK"
-    
+		if '/The-Voice' in url:
+			url='/'.join(url.split('/')[:-1])+'/h.html'
+        
 		link=getUrl(url)
 		playURL= match =re.findall('id  : "(.*?)",\s*pricingPlanId  : "(.*?)"', link)
 		videoID=match[0][0]# check if not found then try other methods
@@ -1468,11 +1474,19 @@ def PlayShowLink ( url ):
 		link=getUrl(playlistURL,cookiejar)        
 	else:
 		cJar=cookielib.LWPCookieJar()
-		getUrl('http://proxyusa.org/index.php',cJar);
 		urltoget='http://api.shahid.net/api/Content/Episode/'+videoID+'/8879?apiKey=sh%40hid0nlin3&hash=b2wMCTHpSmyxGqQjJFOycRmLSex%2BBpTK%2Fooxy6vHaqs%3D'
-		post={'u':urltoget,'encodeURL':'on','allowCookies':'on','stripJS':'on','stripObjects':'on'}
-		post = urllib.urlencode(post)
-		link= getUrl('http://proxyusa.org/includes/process.php?action=update',cJar,post)
+		print 'urltoget',urltoget
+		link=''
+		try:
+			getUrl('http://proxyusa.org/index.php',cJar);
+			post={'u':urltoget,'encodeURL':'on','allowCookies':'on','stripJS':'on','stripObjects':'on'}
+			post = urllib.urlencode(post)
+			link= getUrl('http://proxyusa.org/includes/process.php?action=update',cJar,post, timeout=10)
+		except:
+			getUrl('http://webproxy.to/',cJar);
+			post={'u':urltoget,'encodeURL':'on','allowCookies':'on','stripJS':'on','stripObjects':'on'}
+			post = urllib.urlencode(post)
+			link= getUrl('http://webproxy.to/includes/process.php?action=update',cJar,post,timeout=10)        
         #	'''req = urllib2.Request(playlistURL)
 #	req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36')
 #	response = urllib2.urlopen(req)
