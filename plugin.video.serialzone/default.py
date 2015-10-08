@@ -6,7 +6,7 @@ import xbmcaddon
 import time
 from operator import itemgetter
 import requests
-
+import traceback, sys,cookielib,json
 __addon__       = xbmcaddon.Addon()
 __addonname__   = __addon__.getAddonInfo('name')
 __icon__        = __addon__.getAddonInfo('icon')
@@ -264,42 +264,214 @@ def AddChannels(liveURL):
 	return	
 # end function
 	
+def kodiJsonRequest(params):
+    data = json.dumps(params)
+    request = xbmc.executeJSONRPC(data)
 
+    try:
+        response = json.loads(request)
+    except UnicodeDecodeError:
+        response = json.loads(request.decode('utf-8', 'ignore'))
+
+    try:
+        if 'result' in response:
+            return response['result']
+        return None
+    except KeyError:
+        logger.warn("[%s] %s" % (params['method'], response['error']['message']))
+        return None
+
+
+def setKodiProxy(proxysettings=None):
+
+    if proxysettings==None:
+        print 'proxy set to nothing'
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.usehttpproxy", "value":false}, "id":1}')
+    else:
+        
+        ps=proxysettings.split(':')
+        proxyURL=ps[0]
+        proxyPort=ps[1]
+        proxyType=ps[2]
+        proxyUsername=None
+        proxyPassword=None
+         
+        if len(ps)>3 and '@' in proxysettings:
+            proxyUsername=ps[3]
+            proxyPassword=proxysettings.split('@')[-1]
+
+        print 'proxy set to', proxyType, proxyURL,proxyPort
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.usehttpproxy", "value":true}, "id":1}')
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxytype", "value":' + str(proxyType) +'}, "id":1}')
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxyserver", "value":"' + str(proxyURL) +'"}, "id":1}')
+        xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxyport", "value":' + str(proxyPort) +'}, "id":1}')
+        
+        
+        if not proxyUsername==None:
+            xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxyusername", "value":"' + str(proxyUsername) +'"}, "id":1}')
+            xbmc.executeJSONRPC('{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"network.httpproxypassword", "value":"' + str(proxyPassword) +'"}, "id":1}')
+def getConfiguredProxy():
+    proxyActive = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.usehttpproxy"}, 'id': 1})['value']
+    print 'proxyActive',proxyActive
+    proxyType = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxytype"}, 'id': 1})['value']
+
+    if proxyActive: # PROXY_HTTP
+        proxyURL = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxyserver"}, 'id': 1})['value']
+        proxyPort = unicode(kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxyport"}, 'id': 1})['value'])
+        proxyUsername = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxyusername"}, 'id': 1})['value']
+        proxyPassword = kodiJsonRequest({'jsonrpc': '2.0', "method":"Settings.GetSettingValue", "params":{"setting":"network.httpproxypassword"}, 'id': 1})['value']
+
+        if proxyUsername and proxyPassword and proxyURL and proxyPort:
+            return proxyURL + ':' + str(proxyPort)+':'+str(proxyType) + ':' + proxyUsername + '@' + proxyPassword
+        elif proxyURL and proxyPort:
+            return proxyURL + ':' + str(proxyPort)+':'+str(proxyType)
+    else:
+        return None
+        
+        
+def playmediawithproxy(media_url, name, iconImage,proxyip,port,progress):
+
+    progress.create('Progress', 'Playing with custom proxy')
+    progress.update( 50, "", "setting proxy..", "" )
+    proxyset=False
+    existing_proxy=''
+    try:
+        
+        existing_proxy=getConfiguredProxy()
+        print 'existing_proxy',existing_proxy
+        #read and set here
+        setKodiProxy( proxyip + ':' + port+':0')
+
+        print 'proxy setting complete', getConfiguredProxy()
+        proxyset=True
+        progress.update( 80, "", "setting proxy complete, now playing", "" )
+        progress.close()
+        progress=None
+        import  CustomPlayer
+        player = CustomPlayer.MyXBMCPlayer()
+        listitem = xbmcgui.ListItem( label = str(name), iconImage = iconImage, thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ), path=media_url )
+        player.play( media_url,listitem)
+        xbmc.sleep(1000)
+        while player.is_active:
+            xbmc.sleep(200)
+    except:
+        traceback.print_exc()
+    if progress:
+        progress.close()
+    if proxyset:
+        print 'now resetting the proxy back'
+        setKodiProxy(existing_proxy)
+        print 'reset here'
+    return ''
+    
 def PlayShowLink ( url ): 
-#	url = tabURL.replace('%s',channelName);
-	print "URL: %s" %url
-	#regstring='http:\/\/(.*?)\/admin'
+    #	url = tabURL.replace('%s',channelName);
+    print "URL: %s" %url
+    #regstring='http:\/\/(.*?)\/admin'
         #match=re.findall(regstring, url)
         
-	url2='http://serialzone.in/admin/AjaxProcess.php?cfile=load_video&id=%s&param=value&_=%s' % (url, time.time())
-	print url2
-	req = urllib2.Request(url2)
-	req.add_header('User-Agent', 'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
-	response = urllib2.urlopen(req)
-	link=response.read()
-	response.close()
+    url2='http://serialzone.in/admin/AjaxProcess.php?cfile=load_video&id=%s&param=value&_=%s' % (url, time.time())
+    print url2
+    req = urllib2.Request(url2)
+    req.add_header('User-Agent', 'Mozilla/5.0(iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B314 Safari/531.21.10')
+    response = urllib2.urlopen(req)
+    link=response.read()
+    response.close()
 
-#        print "LINK READ: ", link
-	match =re.findall('embed\/(.*?)\?', link)
-#        print "MATCH: ",match,"\t\tMATCH LEN: ",len(match)
+    #        print "LINK READ: ", link
+    match =re.findall('embed\/(.*?)\?', link)
+    #        print "MATCH: ",match,"\t\tMATCH LEN: ",len(match)
         
-	if len(match)==0:
-#		print 'not found trying again'
-		match =re.findall('yp\(\'(.*?)\'', link)
-#	print "LINK: ",link
-#        print "MATCH: ",match
-	
-	time1=2000
-	line1 = "Playing Youtube Link"
-	xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time1, __icon__))
+    if len(match)==0:
+    #		print 'not found trying again'
+        match =re.findall('yp\(\'(.*?)\'', link)
+    #	print "LINK: ",link
+    #        print "MATCH: ",match
 
-	youtubecode=match[0]
-	uurl = 'plugin://plugin.video.youtube/play/?video_id=%s' % youtubecode
-	#uurl = 'plugin://plugin.video.youtube/v/%s' % youtubecode
-#	print uurl
-	xbmc.executebuiltin("xbmc.PlayMedia("+uurl+")")
+    time1=2000
+    line1 = "Playing Youtube Link"
+    xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time1, __icon__))
 
-	return
+    youtubecode=match[0]
+
+    progress = xbmcgui.DialogProgress()
+    progress.create('Progress', 'Checking if Proxy Required?')
+    progress.update( 20, "", "Getting Urls..")
+
+    liveUrl='https://m.youtube.com/watch?v=%s'%youtubecode
+    stringFailed='The uploader has not made this video available in your country'
+    req = urllib2.Request(liveUrl)
+    req.add_header('User-Agent', 'Mozilla/5.0 (iPad; CPU OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3')
+    response = urllib2.urlopen(req)
+    link=response.read()
+    response.close()
+    if stringFailed in link and 'googlevideo' not in link:        
+        try:
+            proxyserver=selfAddon.getSetting('ProxyServer')#:8080
+            proxyport=str(selfAddon.getSetting('ProxyPort'))
+            try:
+                vquality=int(selfAddon.getSetting('youtubevideo'))
+                print vquality
+                vquality="hd720|medium|small".split('|')[vquality]
+            except:
+                vquality="medium"
+            print proxyserver,proxyport,vquality
+            progress.update( 60, "", "Yes proxy required, using %s:%s"%(proxyserver,str(proxyport)))
+            ##use US proxy and play with it
+            
+            cookieJar = cookielib.LWPCookieJar()
+            cookie_handler = urllib2.HTTPCookieProcessor(cookieJar)
+            opener = urllib2.build_opener(cookie_handler, urllib2.HTTPBasicAuthHandler(), urllib2.HTTPHandler(),urllib2.ProxyHandler({ 'https'  : '%s:%s'%(proxyserver,proxyport)}))
+            req = urllib2.Request(liveUrl)
+            req.add_header('User-Agent','Mozilla/5.0 (iPad; CPU OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3')
+            response = opener.open(req,timeout=20)            
+            link=response.read()
+            response.close()
+            print link
+            progress.update( 90, "", "Got the Link, Now playing via proxy" )
+            pat2='\\\\?u0026quality=(.*?)\\\\.*?url=(http.*?videoplayback.*?),'
+            pat='url_encoded_fmt_stream_map\\\\"\\: (.*?), '
+            final_url=re.findall(pat,link)
+            if len(final_url)==0:
+                return
+                #final_url=re.findall(pat2,link)
+            final_url=final_url[0].split(',')
+            print final_url
+            print 'final_url',final_url
+            qarray=[]
+            for sss in final_url:
+                url=urllib.unquote(sss.split('url=')[1].split('\\')[0])
+                qlt=sss.split('quality=')[1].split(',')[0].split('\\')[0]
+                qarray.append([url,qlt])
+            urltoplay=None
+            if len(qarray)==0:
+                progress.update( 99, "", "FAILED, proxy issues or link resolution problem" )
+                time1=2000
+                line1 = "GeoBocked:Proxy issues or link resolution problem"
+                xbmc.executebuiltin('Notification(%s, %s, %d, %s)'%(__addonname__,line1, time1, __icon__))
+                return 
+            print 'qarray',qarray
+            if len(qarray)>1:
+                for uu in qarray:
+                    if uu[1]==vquality and ',' not in uu[0]:
+                        urltoplay=uu[0]
+                        print 'quality selected',uu
+            if not urltoplay:
+                print 'default quality selected',final_url[0]
+                urltoplay=final_url[0][0]
+                
+            urltoplay=urllib.unquote(urltoplay)
+            print 'urltoplay',urltoplay
+            playmediawithproxy(urltoplay,name,'',proxyserver,proxyport,progress)
+        except: traceback.print_exc(file=sys.stdout)
+        return ''
+
+    uurl = 'plugin://plugin.video.youtube/play/?video_id=%s' % youtubecode
+    #uurl = 'plugin://plugin.video.youtube/v/%s' % youtubecode
+    #	print uurl
+    xbmc.executebuiltin("xbmc.PlayMedia("+uurl+")")
+
+    return
 #end function
 
 

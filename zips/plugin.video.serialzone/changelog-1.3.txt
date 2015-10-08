@@ -9,4 +9,4 @@ icon change
 Update to default.py script to fix logic. 
 
 [B]Version 1.3[/B]
-updated url with / and using Request due to site's bug
+Enable proxy play
