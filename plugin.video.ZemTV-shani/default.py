@@ -936,9 +936,9 @@ def getMatchUrl(matchid):
 
             final_url=''
         
-            print calltype,mode
-            print videoPage
-            print pat
+#            print 'calltype',calltype,mode
+#            print videoPage
+#            print pat
             if calltype=='Live' or calltype=='RecordOne':
                 videoPage='},\n{'.join(videoPage.split("},{"))
                 final_url=re.findall(pat,videoPage)[0]
@@ -1018,8 +1018,10 @@ def PlayWillowMatch(url):
 #    patt='(.*?)'
 #    print link
 #    match_url =re.findall(patt,link)[0]
-
-    match_url=getMatchUrl(url)
+    if not url.startswith('http'):
+        match_url=getMatchUrl(url)
+    else:
+        match_url=url
     if match_url=='': return 
     match_url=match_url+'|User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36'
     playlist = xbmc.PlayList(1)
@@ -1031,14 +1033,62 @@ def PlayWillowMatch(url):
 
 def AddWillowReplayParts(url):
     try:
+    
+        replays=getWillowHighlights(url)
+        
+        addDir(Colored(name,'EB',True) ,'' ,-1,'', False, True,isItFolder=False)		#name,url,mode,icon
+        
+        addDir(Colored('Highlights and Events','blue',True) ,'' ,-1,'', False, True,isItFolder=False)		#name,url,mode,icon
+        if replays and len(replays)>0:
+            for section in replays:
+                addDir(section[0] ,section[1],22,section[2], False, True,isItFolder=False)		#name,url,mode,icon
+            
         link=getMatchUrl(url)
         sections=link.split(',')
-        addDir(Colored(name,'EB',True) ,'' ,-1,'', False, True,isItFolder=False)		#name,url,mode,icon
+        
+        addDir(Colored('Replay','red',True) ,'' ,-1,'', False, True,isItFolder=False)		#name,url,mode,icon
         for section in sections:
             sname,section_number=section.split('=')
             addDir(sname ,url+':'+section_number,22,'', False, True,isItFolder=False)		#name,url,mode,icon
+
+            
     except: traceback.print_exc(file=sys.stdout)
 
+def getWillowHighlights(matchid):
+    try:
+        req = urllib2.Request('https://willowfeeds.willow.tv/willowMatchDetails/MatchJSONData-%s.js'%matchid)
+        req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
+        response = urllib2.urlopen(req)
+        if response.info().get('Content-Encoding') == 'gzip':
+            from StringIO import StringIO
+            import gzip
+            buf = StringIO( response.read())
+            f = gzip.GzipFile(fileobj=buf)
+            link = f.read()
+        else:
+            link=response.read()
+
+        response.close()
+#        print repr(link)
+        pat='(\{.*})'
+        link=re.findall(pat,link)[0]
+        matchdata=json.loads(link)
+        
+        r=[]
+        for m in matchdata["result"]:
+            if "BGUrl" in m and  (not m["BGUrl"]=="") and 'wzvod:' in m["BGUrl"]:
+                rurl=m["BGUrl"]
+                rurl=rurl.replace('wzvod://','http://38.99.68.162:1935/wllwvod/_definst_/wlvod/smil:');
+                rurl=rurl.replace('.mp4','_web.smil/playlist.m3u8');
+                r.append([m["YTVideoName"],rurl,m["YTThumbId"]])
+#        print 'replays',r
+        return r
+            
+    except:
+        print traceback.print_exc(file=sys.stdout)
+        return None
+
+    
 def AddWillowCric(url):
     try:
     
@@ -1094,7 +1144,7 @@ def AddWillowCric(url):
             addDir(entry_name ,match_id,23,'')            
     except: traceback.print_exc(file=sys.stdout)
          
-    addDir(Colored('All Recorded Series','ZM',True) ,base64.b64decode('aHR0cDovL3d3dy53aWxsb3cudHYvRXZlbnRNZ210L3Jlc3VsdHMuYXNw' ),20,'') #blocking as the rtmp requires to be updated to send gaolVanusPobeleVoKosat
+    addDir(Colored('All Recorded Series >>Click to load','ZM',True) ,base64.b64decode('aHR0cDovL3d3dy53aWxsb3cudHYvRXZlbnRNZ210L3Jlc3VsdHMuYXNw' ),20,'') #blocking as the rtmp requires to be updated to send gaolVanusPobeleVoKosat
     
 
     
