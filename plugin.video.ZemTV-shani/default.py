@@ -1056,7 +1056,7 @@ def AddWillowReplayParts(url):
 
 def getWillowHighlights(matchid):
     try:
-        req = urllib2.Request('https://willowfeeds.willow.tv/willowMatchDetails/MatchJSONData-%s.js'%matchid)
+        req = urllib2.Request(base64.b64decode('aHR0cHM6Ly93aWxsb3dmZWVkcy53aWxsb3cudHYvd2lsbG93TWF0Y2hEZXRhaWxzL01hdGNoSlNPTkRhdGEtJXMuanM=')%matchid)
         req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
         response = urllib2.urlopen(req)
         if response.info().get('Content-Encoding') == 'gzip':
@@ -1076,10 +1076,10 @@ def getWillowHighlights(matchid):
         
         r=[]
         for m in matchdata["result"]:
-            if "BGUrl" in m and  (not m["BGUrl"]=="") and 'wzvod:' in m["BGUrl"]:
+            if "BGUrl" in m and  (not m["BGUrl"]=="") and base64.b64decode('d3p2b2Q6') in m["BGUrl"]:
                 rurl=m["BGUrl"]
-                rurl=rurl.replace('wzvod://','http://38.99.68.162:1935/wllwvod/_definst_/wlvod/smil:');
-                rurl=rurl.replace('.mp4','_web.smil/playlist.m3u8');
+                rurl=rurl.replace(base64.b64decode('d3p2b2Q6Ly8='),base64.b64decode('aHR0cDovLzM4Ljk5LjY4LjE2MjoxOTM1L3dsbHd2b2QvX2RlZmluc3RfL3dsdm9kL3NtaWw6'));
+                rurl=rurl.replace('.mp4',base64.b64decode('X3dlYi5zbWlsL3BsYXlsaXN0Lm0zdTg='));
                 r.append([m["YTVideoName"],rurl,m["YTThumbId"]])
 #        print 'replays',r
         return r
