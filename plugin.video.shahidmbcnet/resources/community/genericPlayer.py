@@ -74,7 +74,7 @@ def PlayStream(sourceEtree, urlSoup, name, url):
             except: pass
             liveLink=replaceGLArabVariables(liveLink,pDialog,gcid, title)
             print 'title',title,liveLink
-            if 'proxy' not in title.lower() and 'hd' in title.lower():
+            if 'proxy' not in title.lower() and 'hd' in title.lower() and ':7777/' in liveLink:
                     print 'inside here'
                     start = time.time() 
                     from F4mProxy import f4mProxyHelper
@@ -906,7 +906,7 @@ def replaceGLArabVariables(link, d,gcid, title):
                         else:
                             res=getUrl(finalUrl,timeout=8,returnResponse=True);
                             data=res.read(2000)
-                            if data and len(data)>1000:
+                            if data and len(data)>1000 and 'FLV' in data[:10]:
                                 print 'working proxy found',finalUrl
                                 d.update(90, 'Working server found %s'%server)
                                 link=finalUrl
