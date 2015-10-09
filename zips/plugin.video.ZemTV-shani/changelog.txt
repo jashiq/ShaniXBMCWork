@@ -1,4 +1,7 @@
 [B]Version 3.8.3[/B]
+WL highlights bug fixed
+
+[B]Version 3.8.3[/B]
 WL highlights
 
 

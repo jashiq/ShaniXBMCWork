@@ -1056,7 +1056,7 @@ def AddWillowReplayParts(url):
 
 def getWillowHighlights(matchid):
     try:
-        req = urllib2.Request(base64.b64decode('aHR0cHM6Ly93aWxsb3dmZWVkcy53aWxsb3cudHYvd2lsbG93TWF0Y2hEZXRhaWxzL01hdGNoSlNPTkRhdGEtJXMuanM=')%matchid)
+        req = urllib2.Request(base64.b64decode('aHR0cDovL3dpbGxvd2ZlZWRzLndpbGxvdy50di93aWxsb3dNYXRjaERldGFpbHMvTWF0Y2hKU09ORGF0YS0lcy5qcw==')%matchid)
         req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36')
         response = urllib2.urlopen(req)
         if response.info().get('Content-Encoding') == 'gzip':
