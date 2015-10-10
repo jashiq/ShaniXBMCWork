@@ -2594,6 +2594,22 @@
 	</assignedcategory>
 </channel>
 <channel>
+	<cname>BBC Three</cname>
+	<imageurl>https://static.filmon.com/couch/channels/113/big_logo.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>english</category>
+	</assignedcategory>
+</channel>
+<channel>
+	<cname>BBC Four</cname>
+	<imageurl>https://static.filmon.com/couch/channels/103/big_logo.png</imageurl>
+	<enabled>True</enabled>
+	<assignedcategory>
+	<category>english</category>
+	</assignedcategory>
+</channel>
+<channel>
 	<cname>ITV 1</cname>
 	<imageurl>https://static.filmon.com/couch/channels/11/big_logo.png</imageurl>
 	<enabled>True</enabled>
@@ -3477,6 +3493,7 @@
 	<enabled>True</enabled>
 	<assignedcategory>
 	<category>news</category>
+	<category>english</category>
 	</assignedcategory>
 </channel>
 		
