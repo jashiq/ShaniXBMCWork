@@ -6,6 +6,11 @@
 </streaminginfo>
 
 <streaminginfo>
+	<cname>somali channel</cname>
+	<url>3734</url>
+</streaminginfo>
+
+<streaminginfo>
 	<cname>4Music</cname>
 	<url>95</url>
 </streaminginfo>
@@ -87,9 +92,13 @@
 </streaminginfo>
 
 <streaminginfo>
-	<cname>Rotana Cinema</cname>
-	<title>link1</title>
+	<cname>Rotana Aflam</cname>
 	<url>2618</url>
+</streaminginfo>
+
+<streaminginfo>
+	<cname>Rotana cinema</cname>
+	<url>2615</url>
 </streaminginfo>
 
 <streaminginfo>
@@ -100,15 +109,7 @@
 	<cname>Rotana Clip</cname>
 	<url>2603</url>
 </streaminginfo>
-<streaminginfo>
-	<cname>Infinity</cname>
-	<url>1766</url>
-</streaminginfo>
-<streaminginfo>
-	<cname>Rotana Cinema</cname>
-	<title>link2</title>
-	<url>2615</url>
-</streaminginfo>
+
 <streaminginfo>
 	<cname>Rotana Classic</cname>
 	<url>2609</url>
@@ -122,15 +123,6 @@
 	<url>2600</url>
 </streaminginfo>
 
-<streaminginfo>
-	<cname>MBC 2</cname>
-	<url>368</url>
-</streaminginfo>
-
-<streaminginfo>
-	<cname>Al Fayhaa</cname>
-	<url>1790</url>
-</streaminginfo>
 <streaminginfo>
 	<cname>Suroyo</cname>
 	<url>1796</url>
@@ -182,11 +174,6 @@
 </streaminginfo>
 
 <streaminginfo>
-	<cname>iFilm English</cname>
-	<url>908</url>
-</streaminginfo>
-
-<streaminginfo>
 	<cname>Dubai Sport 1</cname>
 	<url>79</url>
 </streaminginfo>
@@ -218,21 +205,6 @@
 </streaminginfo>
 
 <streaminginfo>
-	<cname>MBC Action</cname>
-	<url>369</url>
-</streaminginfo>
-
-<streaminginfo>
-	<cname>National Geo Ad</cname>
-	<url>1763</url>
-</streaminginfo>
-
-<streaminginfo>
-	<cname>Ajman</cname>
-	<url>1769</url>
-</streaminginfo>
-
-<streaminginfo>
 	<cname>Noor Dubai</cname>
 	<url>1772</url>
 </streaminginfo>
@@ -245,12 +217,6 @@
 <streaminginfo>
 	<cname>Abu Dhabi Sports 1</cname>
 	<url>369</url>
-</streaminginfo>
-
-<streaminginfo>
-	<cname>Animal Planet</cname>
-	<title>Animal Atlas</title>
-	<url>799</url>
 </streaminginfo>
 
 </streamingInfos>
