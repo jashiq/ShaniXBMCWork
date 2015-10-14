@@ -805,9 +805,10 @@ def playmediawithproxy(media_url, name, iconImage,proxyip,port,progress):
         print 'existing_proxy',existing_proxy
         #read and set here
         setKodiProxy( proxyip + ':' + port+':0')
+        proxyset=True
 
         print 'proxy setting complete', getConfiguredProxy()
-        proxyset=True
+        
         progress.update( 80, "", "setting proxy complete, now playing", "" )
         progress.close()
         progress=None
@@ -1023,13 +1024,52 @@ def PlayWillowMatch(url):
     else:
         match_url=url
     if match_url=='': return 
-    match_url=match_url+'|User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36'
-    playlist = xbmc.PlayList(1)
-    playlist.clear()
-    listitem = xbmcgui.ListItem( label = str(name), iconImage = "DefaultVideo.png", thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ) )
-    playlist.add(match_url,listitem)
-    xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
-    xbmcPlayer.play(playlist) 
+    keepplay=True
+    if not 'www.youtube.com' in match_url:
+        match_url=match_url+'|User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36'
+    else:
+        check_url='https://www.youtube.com/get_video_info?html5=1&video_id=%s'% match_url.split('embed/')[1].split('?')[0]
+        match_url= 'plugin://plugin.video.youtube/play/?video_id=%s' % match_url.split('embed/')[1].split('?')[0]
+        try:
+            patt=''
+            txt=getUrl(check_url)
+            if not 'hlsvp=' in txt:
+                #play via proxy
+                keepplay=False
+                progress = xbmcgui.DialogProgress()
+                progress.create('Progress', 'Willow youtube')
+                progress.update( 10, "", "Youtube link ??")
+                
+                ##now play with proxy
+                progress.update( 30, "", "Not in US? Using proxy" )
+                proxyserver=selfAddon.getSetting('WillowProxy')
+                proxyport=selfAddon.getSetting('WillowPort')
+                print 'playing with proxy'
+                cookie_handler = urllib2.HTTPCookieProcessor(cookielib.LWPCookieJar())
+                opener = urllib2.build_opener(cookie_handler, urllib2.HTTPBasicAuthHandler(), urllib2.HTTPHandler(),urllib2.ProxyHandler({ 'https'  : '%s:%s'%(proxyserver,proxyport)}))
+                req = urllib2.Request(check_url)
+                req.add_header('User-Agent','Mozilla/5.0 (iPad; CPU OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11B554a')
+                response = opener.open(req,timeout=20)
+                link=response.read()
+                response.close()
+                print link
+                progress.update( 30, "", "Got the Link, Now playing with Using proxy" )
+                pat='hlsvp=(.*?)&'
+                final_url=urllib.unquote(re.findall(pat,link)[0])
+                print final_url
+                match_url=final_url+'|User-Agent=VLC/2.2.1 LibVLC/2.2.1'
+                keepplay=True
+                #playmediawithproxy(final_url,str(name),'',proxyserver,proxyport,progress)
+                print 'end playing with proxy'
+                
+        except: traceback.print_exc(file=sys.stdout)
+    if keepplay:
+        playlist = xbmc.PlayList(1)
+        playlist.clear()
+        listitem = xbmcgui.ListItem( label = str(name), iconImage = "DefaultVideo.png", thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ) )
+        playlist.add(match_url,listitem)
+        xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
+        xbmcPlayer.play(playlist) 
 
 def AddWillowReplayParts(url):
     try:
@@ -1123,8 +1163,14 @@ def AddWillowCric(url):
                 #if useMyOwnUserNamePwd():
                 #    addDir(entry_name ,match_id,-1,'', False, True,isItFolder=False)		#name,url,mode,icon
                 #else:
-                for i in range(4):
-                    addDir(Colored('Source %s '%str(i+1),'ZM',True)+entry_name ,match_id+':'+str(i+1),21,'', False, True,isItFolder=False)		#name,url,mode,icon
+                loginworked,cookieJar= performWillowLogin();
+                if loginworked:
+                    st='LiveMatch'
+                    url=base64.b64decode('aHR0cDovL3d3dy53aWxsb3cudHYvRXZlbnRNZ210LyVzVVJMLmFzcD9taWQ9JXM=')%(st,match_id)
+                    videoPage = getUrl(url,cookieJar=cookieJar)
+                    videos=json.loads(videoPage)
+                    for video in videos["roku"]["URL"]:
+                        addDir(Colored('Source %s %s '%(str(video["priority"]), video["player"]),'ZM',True) +entry_name ,match_id+':'+str(video["priority"]),21,'', False, True,isItFolder=False)		#name,url,mode,icon
 #                else:
 #                    addDir(entry_name ,match_id,21,'', False, True,isItFolder=False)		#name,url,mode,icon           
         else:
@@ -1532,28 +1578,6 @@ def AddChannelsFromOthers(cctype):
 #    match.append((base64.b64decode('U2t5IFNwb3J0IDU='),'manual',base64.b64decode('aHR0cDovL215amFkb290di5qYWRvb3R2LmNvbS9qbWFya3MvYm94L3BsYXlWaWRlby5waHA/cGxheVVybD1ydG1wOi8vcXVpbnplbGl2ZWZzLmZwbGl2ZS5uZXQvcXVpbnplbGl2ZS1saXZlL3NreXNwb3J0czUuc3RyZWFtP3NlY3VyaXR5dHlwZT0y'),''))
 
 
-    pg=None
-    if cctype==1:
-        pg='pakistan'
-    elif cctype==2:
-        pg='indian'
-    if pg:
-        try:
-            print 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-            xmldata=getPV2Url()
-            sources=etree.fromstring(xmldata)
-            ret=[]
-            for source in sources.findall('items'):
-                print pg,source.findtext('programCategory').lower()
-                if pg in source.findtext('programCategory').lower():
-                    cname=source.findtext('programTitle')
-                    cid=source.findtext('programURL')
-                    cimage=source.findtext('programImage')
-#                    addDir(cname ,base64.b64encode(cid),37,cimage, False, True,isItFolder=False)
-                    match.append((cname +' v3' ,'manual2', cid ,cimage))
-            
-        except:
-            traceback.print_exc(file=sys.stdout)
 
 
 #    match=sorted(match,key=itemgetter(0)   )
@@ -1562,9 +1586,9 @@ def AddChannelsFromOthers(cctype):
         if 1==1:#ctype=='liveWMV' or ctype=='manual':
             print curl
             #if ctype<>'': cname+= '[' + ctype+']'
-            
-            addDir(Colored(cname.capitalize(),'ZM') ,base64.b64encode(curl) ,11 if not ctype=='manual2' else 37 ,imgurl, False, True,isItFolder=False)		#name,url,mode,icon
+            addDir(Colored(cname.capitalize(),'ZM') ,base64.b64encode(curl) ,11,imgurl, False, True,isItFolder=False)		#name,url,mode,icon
     return
+    
 def re_me(data, re_patten):
     match = ''
     m = re.search(re_patten, data)
@@ -1668,8 +1692,8 @@ def get_dag_url(page_data):
     return final_url
 
 def getPV2Url():
-    req = urllib2.Request( base64.b64decode('aHR0cHM6Ly9hcHAuZHlubnMuY29tL2FwcF9wYW5lbC9vdXRwdXQucGhwL3BsYXlsaXN0P3R5cGU9eG1sJmRldmljZVNuPXBha2luZGlhbmhkMw=='))
-    req.add_header('Authorization', base64.b64decode('QmFzaWMgWVdSdGFXNDZRV3hzWVdneFFBPT0=')) 
+    req = urllib2.Request( base64.b64decode('aHR0cHM6Ly9hcHAuZHlubnMuY29tL25ld3BhbmVsL291dHB1dC5waHAvcGxheWxpc3Q/dHlwZT14bWwmZGV2aWNlU249cGFraW5kaWFoZDI='))
+    req.add_header('Authorization', base64.b64decode('QmFzaWMgYkc5bmFXNWhiSGRoZVhNNlFHUnVRRzQ0TkRrPQ==')) 
     response = urllib2.urlopen(req)
     link=response.read()
     return link
