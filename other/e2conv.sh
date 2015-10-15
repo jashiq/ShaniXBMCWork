@@ -1,15 +1,14 @@
 #!/bin/bash
-#copies from https://raw.githubusercontent.com/picons/lamedb-conversion/master/lamedb2tvheadend.sh
+#copied from https://raw.githubusercontent.com/picons/lamedb-conversion/master/lamedb2tvheadend.sh
 #changes done
 #1. changed the format for new version
 #2. auto generate channel number
 #3. same for groups
 
-# ran using cygwin like 
-#home@shani-PC /cygdrive/c/temp
+# ran using cygwin like after copying the rates folder in rats and create empty folder for tvh 
 #$ ./e2conv.sh ./rats ./tvh
 # where rats is the folder with e2 lamdb and tvh is empty output dir.
-# For windows users with Notepad++ (checked with v6.8.3) you can correct the specific file using the option - Edit -> EOL conversion -> Unix/OSX format
+# For windows users with Notepad++, make sure this file is aved using  the option - Edit -> EOL conversion -> Unix/OSX format
 
 ################################################################################################################
 ### LAMEDB 2 TVHEADEND CHANNEL CONVERTER #######################################################################
