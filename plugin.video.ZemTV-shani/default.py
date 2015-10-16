@@ -1578,6 +1578,28 @@ def AddChannelsFromOthers(cctype):
 #    match.append((base64.b64decode('U2t5IFNwb3J0IDU='),'manual',base64.b64decode('aHR0cDovL215amFkb290di5qYWRvb3R2LmNvbS9qbWFya3MvYm94L3BsYXlWaWRlby5waHA/cGxheVVybD1ydG1wOi8vcXVpbnplbGl2ZWZzLmZwbGl2ZS5uZXQvcXVpbnplbGl2ZS1saXZlL3NreXNwb3J0czUuc3RyZWFtP3NlY3VyaXR5dHlwZT0y'),''))
 
 
+    pg=None
+    if cctype==1:
+        pg='pakistan'
+    elif cctype==2:
+        pg='indian'
+    if pg:
+        try:
+            print 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+            xmldata=getPV2Url()
+            sources=etree.fromstring(xmldata)
+            ret=[]
+            for source in sources.findall('items'):
+                print pg,source.findtext('programCategory').lower()
+                if pg in source.findtext('programCategory').lower():
+                    cname=source.findtext('programTitle')
+                    cid=source.findtext('programURL')
+                    cimage=source.findtext('programImage')
+#                    addDir(cname ,base64.b64encode(cid),37,cimage, False, True,isItFolder=False)
+                    match.append((cname +' v3' ,'manual2', cid ,cimage))
+            
+        except:
+            traceback.print_exc(file=sys.stdout)
 
 
 #    match=sorted(match,key=itemgetter(0)   )
@@ -1586,9 +1608,9 @@ def AddChannelsFromOthers(cctype):
         if 1==1:#ctype=='liveWMV' or ctype=='manual':
             print curl
             #if ctype<>'': cname+= '[' + ctype+']'
-            addDir(Colored(cname.capitalize(),'ZM') ,base64.b64encode(curl) ,11,imgurl, False, True,isItFolder=False)		#name,url,mode,icon
-    return
-    
+            
+            addDir(Colored(cname.capitalize(),'ZM') ,base64.b64encode(curl) ,11 if not ctype=='manual2' else 37 ,imgurl, False, True,isItFolder=False)		#name,url,mode,icon
+    return    
 def re_me(data, re_patten):
     match = ''
     m = re.search(re_patten, data)
@@ -1692,8 +1714,8 @@ def get_dag_url(page_data):
     return final_url
 
 def getPV2Url():
-    req = urllib2.Request( base64.b64decode('aHR0cHM6Ly9hcHAuZHlubnMuY29tL25ld3BhbmVsL291dHB1dC5waHAvcGxheWxpc3Q/dHlwZT14bWwmZGV2aWNlU249cGFraW5kaWFoZDI='))
-    req.add_header('Authorization', base64.b64decode('QmFzaWMgYkc5bmFXNWhiSGRoZVhNNlFHUnVRRzQ0TkRrPQ==')) 
+    req = urllib2.Request( base64.b64decode('aHR0cHM6Ly9hcHAuZHlubnMuY29tL2FwcF9wYW5lbC9vdXRwdXQucGhwL3BsYXlsaXN0P3R5cGU9eG1sJmRldmljZVNuPXBha2luZGlhbmhkMw=='))
+    req.add_header('Authorization', base64.b64decode('QmFzaWMgWVdSdGFXNDZRV3hzWVdneFFBPT0=')) 
     response = urllib2.urlopen(req)
     link=response.read()
     return link
@@ -1703,7 +1725,6 @@ def getPV2Auth():
     response = urllib2.urlopen(req)
     link=response.read()
     return link
-
 
 def PlayStreamSports(url):
 
@@ -1728,7 +1749,7 @@ def PlayPV2Link(url):
     print 'urlToPlay',urlToPlay
     listitem = xbmcgui.ListItem( label = str(name), iconImage = "DefaultVideo.png", thumbnailImage = xbmc.getInfoImage( "ListItem.Thumb" ) )
     print "playing stream name: " + str(name) 
-    xbmc.Player( xbmc.PLAYER_CORE_AUTO ).play( urlToPlay, listitem)    
+    xbmc.Player( xbmc.PLAYER_CORE_AUTO ).play( urlToPlay, listitem)  
     
 def PlayOtherUrl ( url ):
     url=base64.b64decode(url)

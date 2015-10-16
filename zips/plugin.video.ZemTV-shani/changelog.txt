@@ -1,3 +1,6 @@
+[B]Version 3.8.7[/B]
+undo v3 mistake
+
 [B]Version 3.8.6[/B]
 better WL condition
 
