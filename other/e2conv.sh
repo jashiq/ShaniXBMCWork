@@ -46,7 +46,10 @@ else
 fi
 
 mkdir $tempdir
-
+#declare -i cnumber
+#export cnumber
+#export cnumber=0
+echo "cnumber=0" > ./currentcounter.bash
 cat $e2settingsdir/lamedb | iconv -f UTF-8 -t MS-ANSI -c | iconv -f MS-ANSI -t UTF-8 -c > $tempdir/lamedb
 sed -i -e 's/\(^....:........:....:....:.*:.*\)/\L\1/' -e 's/\(^........:....:....\)/\L\1/' $tempdir/lamedb
 
@@ -355,26 +358,25 @@ echo ""
 ### CONVERT GROUPS #############################################################################################
 ################################################################################################################
 
-cnumber=0
+
 mkdir -p $tempdir/tvh_channellist/channel
 mkdir -p $tempdir/tvh_channellist/channel/tag
 mkdir -p $tempdir/tvh_channellist/channel/config
 
-gfname=$(echo 1 | md5sum | cut -f1 -d" ")
-echo "All Channels:$gfname" > $tempdir/tags
-#fname=$(echo "1" | md5sum)
+#gfname=$(echo 1 | md5sum | cut -f1 -d" ")
+#echo "All Channels:$gfname" > $tempdir/tags
 
-echo $gfname
-tagfile=$tempdir/tvh_channellist/channel/tag/$gfname
-echo -e "{" > $tagfile
-echo -e "\t\"enabled\": true," >> $tagfile
-echo -e "\t\"internal\": false," >> $tagfile
-echo -e "\t\"titled_icon\": false," >> $tagfile
-echo -e "\t\"name\": \"All Channels\"," >> $tagfile
-echo -e "\t\"comment\": \"\"," >> $tagfile
-echo -e "\t\"icon\": \"\"," >> $tagfile
-echo -e "\t\"index\": 1" >> $tagfile
-echo -e "}" >> $tagfile
+#echo $gfname
+#tagfile=$tempdir/tvh_channellist/channel/tag/$gfname
+#echo -e "{" > $tagfile
+#echo -e "\t\"enabled\": true," >> $tagfile
+#echo -e "\t\"internal\": false," >> $tagfile
+#echo -e "\t\"titled_icon\": false," >> $tagfile
+#echo -e "\t\"name\": \"All Channels\"," >> $tagfile
+#echo -e "\t\"comment\": \"\"," >> $tagfile
+#echo -e "\t\"icon\": \"\"," >> $tagfile
+#echo -e "\t\"index\": 1" >> $tagfile
+#echo -e "}" >> $tagfile
 
 
 currentline=1
@@ -397,7 +399,8 @@ grep -h -o -e 'userbouquet.*tv' -e 'userbouquet.*radio' $e2settingsdir/bouquets.
     echo -e "\t\"index\": $currentline" >> $tagfile
     echo -e "}" >> $tagfile
 done
-
+#echo "i am heere"
+#echo $currentline
 mkdir -p $tempdir/tvh_channellist/channel
 
 linescount=$(grep -h -o -e 'userbouquet.*tv' -e 'userbouquet.*radio' $e2settingsdir/bouquets.tv $e2settingsdir/bouquets.radio | wc -l)
@@ -411,8 +414,11 @@ grep -h -o -e 'userbouquet.*tv' -e 'userbouquet.*radio' $e2settingsdir/bouquets.
     bouquet=$(echo "${filename##*.}" | tr [a-z] [A-Z])" - "$(sed -n "1{p;q}" $e2settingsdir/$filename | sed -e 's/#NAME //g' -e 's/:/ /' -e 's/;/ /' -e 's/^[ \t]*//' -e 's/[ \t]*$//')
     TAG=$(grep -h "$bouquet:" $tempdir/tags | sed "s;$bouquet:;;g")
 
+    chmod 755 ./currentcounter.bash
+    source ./currentcounter.bash
     grep -h -o '1:0:.*:.*:.*:.*:.*:0:0:0:' $e2settingsdir/$filename | tr [A-Z] [a-z] | while read line ; do
         cnumber=$((cnumber+1))  
+        echo $cnumber
         serviceref=(${line//:/ })
         SID=$(printf "%d\n" "0x${serviceref[3]}")
         NID=$(printf "%d\n" "0x${serviceref[5]}")
@@ -445,7 +451,9 @@ grep -h -o -e 'userbouquet.*tv' -e 'userbouquet.*radio' $e2settingsdir/bouquets.
             echo -e "\t\"tags\": [" >> $channel
             echo -e "\t\t\"$TAG\"," >> $channel
         fi
+    echo "cnumber=$cnumber" > ./currentcounter.bash
     done
+    
 done
 
 for file in $tempdir/tvh_channellist/channel/config/* ; do
