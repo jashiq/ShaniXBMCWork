@@ -1,3 +1,7 @@
+Version 1.9.1
+support for x-addr and RijndaelManaged encryption
+
+
 Version 1.9.0
 support for proxy using <proxy> tag and $PLAYERPROXY$=IPAddress:Port
 

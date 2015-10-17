@@ -780,6 +780,12 @@ def parse_regex(reg_item):
                             regexs[i('name')[0].string]['x-req'] = i('x-req')[0].string
                         except:
                             addon_log("Regex: -- No x-req --")
+
+                        try:
+                            regexs[i('name')[0].string]['x-addr'] = i('x-addr')[0].string
+                        except:
+                            addon_log("Regex: -- No x-addr --")                            
+                            
                         try:
                             regexs[i('name')[0].string]['x-forward'] = i('x-forward')[0].string
                         except:
@@ -971,6 +977,8 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                             req.add_header('User-agent', m['agent'])
                         if 'x-req' in m:
                             req.add_header('X-Requested-With', m['x-req'])
+                        if 'x-addr' in m:
+                            req.add_header('x-addr', m['x-addr'])
                         if 'x-forward' in m:
                             req.add_header('X-Forwarded-For', m['x-forward'])
                         if 'setcookie' in m:
@@ -1094,6 +1102,7 @@ def getRegexParsed(regexs, url,cookieJar=None,forCookieJarOnly=False,recursiveCa
                         url = url.replace("$doregex[" + k + "]", val)
                     else:
                         if not link=='':
+                            #print 'link',link
                             reg = re.compile(m['expre']).search(link)
                             val=''
                             try:
