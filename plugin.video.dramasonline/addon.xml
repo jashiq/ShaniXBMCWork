@@ -2,7 +2,7 @@
 <addon id="plugin.video.dramasonline"
        name="DramasOnline.com"
        version="2.5.0"
-       provider-name="shani">
+       provider-name="javed">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
 	<import addon="script.module.urlresolver" version="1.0.0"/>
